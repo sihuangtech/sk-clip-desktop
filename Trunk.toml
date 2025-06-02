@@ -7,3 +7,7 @@ ignore = ["./src-tauri"]
 [serve]
 port = 1420
 open = false
+ws_protocol = "ws"
+
+[tools]
+wasm_bindgen = "0.2.100"

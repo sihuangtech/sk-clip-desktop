@@ -1,252 +1,87 @@
-# 视频翻译工具
+# 视频创作与翻译工具
 
-这是一个基于 Tauri 和 Rust 开发的视频翻译桌面应用，主要功能是将上传的视频翻译成其他语言，同时尽可能保留原始音色和情感。
+这是一个基于 Tauri 和 Rust 构建的强大跨平台桌面应用，旨在彻底革新视频内容的创作方式。它集成了先进的视频翻译、多样化的文档内容导入、灵活的视频文件插入与基础剪辑以及智能语音合成功能，特别优化用于将 PPT、Markdown 或 PDF 文档内容与视频素材无缝结合，高效制作高质量的演示汇报、在线课程或讲解视频。
+
+本工具致力于提供离线、私密的创作环境，所有敏感的视频和文档处理均在您的本地计算机上完成，无需上传到云端。
 
 ## 功能特点
 
-- 支持视频上传和翻译处理
-- 支持中文、英文、日语和韩语之间的互译
-- 离线处理，保护隐私
-- 简洁直观的用户界面
+- **灵活的视频插入与基础剪辑**：
+  - 允许用户导入本地视频文件，作为主视频或插入素材。
+  - 提供剪裁、分割、调整时长等基础视频剪辑功能，方便对导入的视频素材进行处理。
+  - 简化视频素材的管理和准备。
+
+- **可视化时间线编辑器**：
+  - 提供直观的时间线界面，允许用户自由拖拽、排序和组合文档内容、视频片段和生成的语音/字幕。
+  - 精确控制各个元素的出现时间和时长，实现精细化的视频结构编排。
+
+- **多样化文档导入与整合**：
+  - 轻松导入 PPTX, Markdown (.md), PDF 等格式的文档文件。
+  - 应用能够智能解析文档内容，例如将 PPT 页面或 PDF 页转换为可用于视频的图像或片段，将 Markdown 转换为排版好的文本或幻灯片。
+  - 将文档内容作为视觉元素或背景，与视频片段结合。
+
+- **智能多语言语音合成 (TTS)**：
+  - 用户可以直接输入或粘贴文本，应用能将其合成为高质量的多语言语音。*（将集成离线免费开源的 [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) 模型实现此功能）*
+  - 合成的语音可以精确同步到视频的特定片段或文档内容的展示时段。
+  - 规划支持多种音色和风格，以匹配不同的内容需求。
+
+- **高精度视频翻译**：
+  - 支持智能识别视频中的语音，并将其翻译成多种目标语言（目前规划支持中文、英文、日语、韩语，未来可扩展）。*（将结合离线免费开源的语音识别和文本翻译技术实现此功能。语音识别考虑集成 [Whisper](https://github.com/openai/whisper) 或其变种；文本翻译将采用 [Helsinki-NLP](https://github.com/Helsinki-NLP) 的开源模型，具体集成方式（可能结合 [CTranslate2](https://github.com/OpenNMT/CTranslate2) 等推理引擎及其 Rust bindings）待进一步评估确定。）*
+  - 翻译过程尽量保留原始说话人的音色、语速和情感，提供更自然、更具表现力的翻译结果。
+  - 支持生成翻译字幕和配音。
+
+- **完全离线处理**：
+  - 所有计算密集型任务，包括视频分析、翻译、语音合成和最终渲染，都在本地设备上执行。
+  - 最大程度保护用户隐私和数据安全。
+  - 不受网络速度和稳定性的限制。
+
+- **跨平台兼容性**：
+  - 基于 Tauri 框架开发，确保应用在 Windows, macOS, Linux 三大主流操作系统上提供一致的体验和性能。
 
 ## 技术栈
 
-- 前端：Yew (Rust WebAssembly 框架)
-- 后端：Rust + Tauri
-- 视频处理：FFmpeg (设计中，当前版本为模拟实现)
-- 语音识别：Whisper (设计中，当前版本为模拟实现)
-- 机器翻译：开源翻译模型 (设计中，当前版本为模拟实现)
-- 语音合成：开源TTS模型 (设计中，当前版本为模拟实现)
-- 口型同步：开源口型同步技术 (设计中，当前版本为模拟实现)
+- 前端：使用高性能的 Rust WebAssembly 框架 Yew 构建交互式用户界面。
+- 后端：强大的 Rust 语言结合 Tauri 框架处理底层系统交互、文件操作和复杂的视频/文档处理逻辑。
+- 视频/文档处理：计划集成 FFmpeg (处理音视频编解码、格式转换、剪辑等), Pandoc (处理 Markdown/PDF 转换) 及其他相关的开源库，实现强大的内容处理能力。
+- AI 模型：
+  - **语音合成 (TTS)**：[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) (离线免费开源，用于文本到语音的生成)
+  - **语音识别 (ASR)**：规划集成 [Whisper](https://github.com/openai/whisper) 或其变种 (离线免费开源，用于将语音转为文本)。
+  - **文本翻译 (MT)**：将采用 [Helsinki-NLP](https://github.com/Helsinki-NLP) 的开源模型 (离线免费开源)，具体集成方式和用于 Rust 的库（可能结合 [CTranslate2](https://github.com/OpenNMT/CTranslate2) 等推理引擎及其 Rust bindings）待进一步评估确定。
 
-## 开发环境配置
+## 快速开始
 
-### Windows
-
-1. 安装 Rust 和 Cargo：
-   - 下载并运行 [rustup-init.exe](https://win.rustup.rs/x86_64)
-   - 按照安装向导完成安装
-
-2. 安装 Microsoft Visual C++ 构建工具：
-   - 访问 [Microsoft C++ 构建工具](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
-   - 安装"C++ 构建工具"工作负载
-
-3. 安装 WebView2：
-   - 下载 [WebView2 运行时](https://developer.microsoft.com/zh-cn/microsoft-edge/webview2/)
-
-4. 安装 Trunk (用于构建Yew应用)：
-   ```cmd
-   # 使用官方源安装
-   cargo install trunk
-
-   # 使用国内镜像源安装
-   # 方法1：全局配置（在 ~/.cargo/config.toml 中添加以下内容）：
-   # [source.crates-io]
-   # replace-with = 'ustc'
-   # 
-   # [source.ustc]
-   # registry = "https://mirrors.ustc.edu.cn/crates.io-index"
-   
-   # 方法2：项目级配置（在项目根目录创建 .cargo/config.toml）：
-   # [source.crates-io]
-   # replace-with = 'ustc'
-   # 
-   # [source.ustc]
-   # registry = "https://mirrors.ustc.edu.cn/crates.io-index"
-   
-   # 然后安装 trunk
-   cargo install trunk
-
-   # 其他可用的镜像源配置：
-   # 清华大学镜像
-   # [source.crates-io]
-   # replace-with = 'tuna'
-   # 
-   # [source.tuna]
-   # registry = "https://mirrors.tuna.tsinghua.edu.cn/crates.io-index"
-   ```
-
-5. 添加 WebAssembly 目标：
-   ```cmd
-   rustup target add wasm32-unknown-unknown
-   ```
-
-6. 安装 Tauri CLI：
-   ```cmd
-   cargo install tauri-cli
-   ```
-
-### macOS
-
-1. 安装 Rust 和 Cargo：
-   ```bash
-   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-   ```
-
-2. 安装开发依赖：
-   ```bash
-   xcode-select --install
-   ```
-
-3. 安装 Trunk (用于构建Yew应用)：
-   ```bash
-   cargo install trunk
-   ```
-
-4. 添加 WebAssembly 目标：
-   ```bash
-   rustup target add wasm32-unknown-unknown
-   ```
-
-5. 安装 Tauri CLI：
-   ```bash
-   cargo install tauri-cli
-   ```
-
-### Linux
-
-1. 安装 Rust 和 Cargo：
-   ```bash
-   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-   ```
-
-2. 安装依赖项 (基于Debian/Ubuntu)：
-   ```bash
-   sudo apt update
-   sudo apt install libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
-   ```
-   
-   对于其他发行版，请参考 [Tauri 官方文档](https://tauri.app/zh-cn/start/prerequisites)
-
-3. 安装 Trunk (用于构建Yew应用)：
-   ```bash
-   cargo install trunk
-   ```
-
-4. 添加 WebAssembly 目标：
-   ```bash
-   rustup target add wasm32-unknown-unknown
-   ```
-
-5. 安装 Tauri CLI：
-   ```bash
-   cargo install tauri-cli
-   ```
-
-## 验证安装和克隆项目
-
-完成上述环境配置后，请按照以下步骤验证安装并克隆项目：
-
-1. 克隆项目并进入项目目录：
-   ```bash
-   git clone <repository-url>
-   cd multisay-tauri-desktop-app
-   ```
-
-2. 验证环境是否成功安装：
-   ```bash
-   rustc --version
-   cargo --version
-   trunk --version
-   rustup target list --installed
-   ```
-
-3. 根据操作系统执行额外的验证：
-   - Windows：确保在 `rustup target list --installed` 输出中看到 `wasm32-unknown-unknown`
-   - macOS：运行 `pkgutil --pkg-info=com.apple.pkg.CLTools_Executables` 检查Xcode命令行工具
-   - Linux：运行 `dpkg -s libwebkit2gtk-4.0-dev libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev | grep 'Status: install ok installed'` 检查系统依赖
-
-如果所有命令都返回适当的版本信息，并且系统特定的验证也通过，说明环境已正确配置。
-
-## 更新 Rust 和 Cargo
-
-如果您需要更新 Rust 和 Cargo 到最新版本，请按照以下步骤操作：
-
-1. 检查当前版本：
-   ```bash
-   cargo --version
-   rustc --version
-   ```
-
-2. 更新到最新稳定版本：
-   ```bash
-   rustup update
-   ```
-
-3. 更新完成后验证版本：
-   ```bash
-   cargo --version
-   rustc --version
-   ```
-
-如果您想使用其他版本：
-- 更新到最新的 nightly 版本：`rustup update nightly`
-- 更新到最新的 beta 版本：`rustup update beta`
-
-注意：
-- 更新过程会自动更新所有已安装的工具链
-- 如果遇到权限问题，在 Linux/macOS 上可能需要使用 `sudo`
-- 在 Windows 上，建议以管理员身份运行命令提示符
-- 如果更新后遇到问题，可以使用 `rustup self uninstall` 完全卸载，然后重新安装
-
-## 环境安装故障排除
-
-如果在验证环境时遇到问题，请参考以下排除步骤：
-
-1. **Rust/Cargo 未找到**：
-   - 确保已将 Rust 添加到系统 PATH 中
-   - Windows 用户可能需要重新启动终端或计算机
-   - Linux/macOS 用户确保已执行 `source $HOME/.cargo/env`
-
-2. **Trunk 未找到**：
-   - 确保 `$HOME/.cargo/bin` 目录在系统 PATH 中
-   - 尝试重新安装：`cargo install trunk --force`
-
-3. **WebAssembly 目标未安装**：
-   - 再次运行：`rustup target add wasm32-unknown-unknown`
-   - 确保网络连接正常
-
-4. **系统依赖缺失 (Linux)**：
-   - 确保已安装所有必要的系统库：
-     ```bash
-     sudo apt update && sudo apt install libwebkit2gtk-4.0-dev build-essential curl wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
-     ```
-
-5. **Visual C++ 构建工具问题 (Windows)**：
-   - 重新安装 Visual C++ 构建工具
-   - 确保已安装 "Desktop development with C++"
-   
-6. **WebView2 问题 (Windows)**：
-   - 确保 WebView2 运行时已正确安装
-   - 尝试重启系统
+请参考 [开发环境配置](docs/development-setup.md) 文档，了解如何在您的操作系统上搭建开发环境。
 
 ## 运行应用
 
-无论您使用哪种操作系统，都可以通过以下命令运行和构建应用：
+在项目根目录执行以下命令：
 
-1. 开发模式运行：
-   ```bash
-   cargo tauri dev
-   ```
+```bash
+cargo tauri dev
+```
 
-2. 构建发布版本：
-   ```bash
-   cargo tauri build
-   ```
+构建发布版本：
+
+```bash
+cargo tauri build
+```
 
 ## 使用说明
 
-1. 启动应用后，点击文件选择区域上传视频文件
-2. 选择源语言和目标语言
-3. 点击"开始翻译"按钮
-4. 等待翻译处理完成
-5. 完成后可以直接在应用中播放翻译后的视频
+请参考 [使用指南](docs/usage.md) 文档，了解如何使用本工具的各项功能进行视频创作。
+
+## 更新 Rust 和 Cargo
+
+请参考 [更新指南](docs/updating-rust.md) 文档。
+
+## 环境安装故障排除
+
+请参考 [故障排除指南](docs/troubleshooting.md) 文档。
 
 ## 当前限制
 
-- 当前版本为原型演示，视频处理功能为模拟实现
-- 尚未集成真实的语音识别、翻译和语音合成组件
-- 未来版本将集成实际的开源视频处理模块
+- 当前版本为原型演示，部分高级功能（如可视化时间线、复杂剪辑）和核心视频/文档/语音处理功能为模拟或基础实现，主要用于展示应用框架和流程。
+- AI 模型集成和口型同步技术尚在设计和初步研究阶段。
 
 ## 许可证
 
