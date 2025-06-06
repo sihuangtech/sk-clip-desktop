@@ -1,0 +1,41 @@
+{
+  "user_preferences": {
+    "whisper": {
+      "preferred_model": "base",
+      "auto_download": true,
+      "language_priority": ["zh", "en"]
+    },
+    "translation": {
+      "preferred_provider": "opus_mt",
+      "auto_download": true,
+      "cache_translations": true
+    },
+    "tts": {
+      "preferred_engine": "neural",
+      "preferred_voice": {
+        "zh": "zh_female",
+        "en": "en_female"
+      },
+      "speech_rate": 1.0,
+      "volume": 0.8
+    }
+  },
+  "download_preferences": {
+    "wifi_only": false,
+    "background_download": true,
+    "notification_on_complete": true,
+    "max_download_speed_mbps": 0
+  },
+  "storage_preferences": {
+    "custom_model_path": "",
+    "auto_cleanup_enabled": true,
+    "max_storage_gb": 5,
+    "backup_models": false
+  },
+  "advanced_settings": {
+    "gpu_acceleration": "auto",
+    "cpu_threads": 0,
+    "memory_limit_gb": 4,
+    "debug_mode": false
+  }
+} 

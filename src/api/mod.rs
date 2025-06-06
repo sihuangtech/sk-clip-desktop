@@ -3,6 +3,11 @@
 use wasm_bindgen::prelude::*;
 use crate::types::{TranslateVideoArgs, UploadVideoArgs};
 
+// 为了方便在其他模块中使用，创建一个别名
+pub mod tauri_api {
+    pub use super::*;
+}
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
@@ -54,5 +59,52 @@ pub async fn check_task_output(task_id: String) -> Result<String, String> {
         Ok(output)
     } else {
         Err("检查任务状态失败".to_string())
+    }
+}
+
+// 获取应用配置 API
+pub async fn get_app_config() -> Result<serde_json::Value, String> {
+    let result = invoke("get_app_config", JsValue::NULL).await;
+    
+    if let Ok(config) = serde_wasm_bindgen::from_value::<serde_json::Value>(result) {
+        Ok(config)
+    } else {
+        Err("获取配置失败".to_string())
+    }
+}
+
+// 更新应用配置 API
+pub async fn update_app_config(config: serde_json::Value) -> Result<(), String> {
+    let args = serde_wasm_bindgen::to_value(&config)
+        .map_err(|e| format!("序列化配置失败: {}", e))?;
+    
+    let result = invoke("update_app_config", args).await;
+    
+    if serde_wasm_bindgen::from_value::<bool>(result).unwrap_or(false) {
+        Ok(())
+    } else {
+        Err("更新配置失败".to_string())
+    }
+}
+
+// 获取AI模型状态 API
+pub async fn get_ai_model_status() -> Result<serde_json::Value, String> {
+    let result = invoke("get_ai_model_status", JsValue::NULL).await;
+    
+    if let Ok(status) = serde_wasm_bindgen::from_value::<serde_json::Value>(result) {
+        Ok(status)
+    } else {
+        Err("获取AI模型状态失败".to_string())
+    }
+}
+
+// 初始化AI模型 API
+pub async fn initialize_ai_models() -> Result<(), String> {
+    let result = invoke("initialize_ai_models", JsValue::NULL).await;
+    
+    if serde_wasm_bindgen::from_value::<bool>(result).unwrap_or(false) {
+        Ok(())
+    } else {
+        Err("初始化AI模型失败".to_string())
     }
 } 

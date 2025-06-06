@@ -1,0 +1,161 @@
+{
+  "version": "1.0.0",
+  "models": {
+    "whisper": {
+      "enabled": true,
+      "default_model": "base",
+      "models": {
+        "tiny": {
+          "size_mb": 39,
+          "download_url": "https://openaipublic.azureedge.net/main/whisper/models/65147644a518d12f04e32d6f3b26facc3f8dd46e5390956a9424a650c0ce22b9f/tiny.pt",
+          "description": "最小模型，速度最快但准确度较低",
+          "languages": ["en", "zh", "ja", "ko", "es", "fr", "de", "ru", "pt"]
+        },
+        "base": {
+          "size_mb": 74,
+          "download_url": "https://openaipublic.azureedge.net/main/whisper/models/ed3a0b6b1c0edf879ad9b11b1af5a0e6ab5db9205f891f668f8b0e6c6326e34e/base.pt",
+          "description": "基础模型，平衡速度和准确度",
+          "languages": ["en", "zh", "ja", "ko", "es", "fr", "de", "ru", "pt"]
+        },
+        "small": {
+          "size_mb": 244,
+          "download_url": "https://openaipublic.azureedge.net/main/whisper/models/9ecf779972d90ba49c06d968637d720dd632c55bbf19d441fb42bf17a411e794/small.pt",
+          "description": "小型模型，较好的准确度",
+          "languages": ["en", "zh", "ja", "ko", "es", "fr", "de", "ru", "pt"]
+        },
+        "medium": {
+          "size_mb": 769,
+          "download_url": "https://openaipublic.azureedge.net/main/whisper/models/345ae4da62f9b3d59415adc60127b97c714f32e89e936602e85993674d08dcb1/medium.pt",
+          "description": "中型模型，高准确度",
+          "languages": ["en", "zh", "ja", "ko", "es", "fr", "de", "ru", "pt"]
+        },
+        "large": {
+          "size_mb": 1550,
+          "download_url": "https://openaipublic.azureedge.net/main/whisper/models/81f7c96c852ee8fc832187b0132e569d6c3065a3252ed18e56effd0b6a73e524/large-v2.pt",
+          "description": "大型模型，最高准确度但速度较慢",
+          "languages": ["en", "zh", "ja", "ko", "es", "fr", "de", "ru", "pt"]
+        }
+      }
+    },
+    "translation": {
+      "enabled": true,
+      "default_provider": "opus_mt",
+      "providers": {
+        "opus_mt": {
+          "description": "OPUS-MT 翻译模型系列",
+          "base_url": "https://huggingface.co/Helsinki-NLP",
+          "models": {
+            "zh_en": {
+              "model_name": "opus-mt-zh-en",
+              "size_mb": 298,
+              "source_lang": "zh",
+              "target_lang": "en"
+            },
+            "en_zh": {
+              "model_name": "opus-mt-en-zh",
+              "size_mb": 298,
+              "source_lang": "en",
+              "target_lang": "zh"
+            },
+            "ja_en": {
+              "model_name": "opus-mt-ja-en",
+              "size_mb": 312,
+              "source_lang": "ja",
+              "target_lang": "en"
+            },
+            "en_ja": {
+              "model_name": "opus-mt-en-ja",
+              "size_mb": 312,
+              "source_lang": "en",
+              "target_lang": "ja"
+            }
+          }
+        },
+        "m2m100": {
+          "description": "Facebook M2M100 多语言翻译模型",
+          "base_url": "https://huggingface.co/facebook",
+          "models": {
+            "small": {
+              "model_name": "m2m100_418M",
+              "size_mb": 1600,
+              "languages": ["zh", "en", "ja", "ko", "es", "fr", "de", "ru", "pt"]
+            },
+            "large": {
+              "model_name": "m2m100_1.2B",
+              "size_mb": 4800,
+              "languages": ["zh", "en", "ja", "ko", "es", "fr", "de", "ru", "pt"]
+            }
+          }
+        }
+      }
+    },
+    "tts": {
+      "enabled": true,
+      "default_engine": "neural",
+      "engines": {
+        "espeak": {
+          "description": "eSpeak TTS 引擎，轻量级",
+          "size_mb": 5,
+          "voices": {
+            "zh": ["zh", "zh-yue"],
+            "en": ["en", "en-us", "en-gb"],
+            "ja": ["ja"],
+            "ko": ["ko"],
+            "es": ["es"],
+            "fr": ["fr"],
+            "de": ["de"],
+            "ru": ["ru"],
+            "pt": ["pt"]
+          }
+        },
+        "neural": {
+          "description": "神经网络 TTS 模型，高质量",
+          "base_url": "https://huggingface.co/microsoft",
+          "models": {
+            "zh_female": {
+              "model_name": "speecht5_tts",
+              "voice_name": "zh-CN-XiaoxiaoNeural",
+              "size_mb": 500,
+              "gender": "female",
+              "language": "zh"
+            },
+            "zh_male": {
+              "model_name": "speecht5_tts",
+              "voice_name": "zh-CN-YunxiNeural",
+              "size_mb": 500,
+              "gender": "male",
+              "language": "zh"
+            },
+            "en_female": {
+              "model_name": "speecht5_tts",
+              "voice_name": "en-US-AriaNeural",
+              "size_mb": 500,
+              "gender": "female",
+              "language": "en"
+            },
+            "en_male": {
+              "model_name": "speecht5_tts",
+              "voice_name": "en-US-GuyNeural",
+              "size_mb": 500,
+              "gender": "male",
+              "language": "en"
+            }
+          }
+        }
+      }
+    }
+  },
+  "download_settings": {
+    "max_concurrent_downloads": 2,
+    "retry_attempts": 3,
+    "timeout_seconds": 300,
+    "verify_checksum": true,
+    "auto_download_on_startup": false,
+    "preferred_mirror": "official"
+  },
+  "storage_settings": {
+    "max_cache_size_gb": 10,
+    "auto_cleanup_old_models": true,
+    "compress_models": false
+  }
+} 

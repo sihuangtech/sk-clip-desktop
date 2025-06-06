@@ -72,6 +72,27 @@ pub enum AppError {
     #[error("参数错误: {0}")]
     ArgumentError(String), // 函数或命令接收到的参数无效
     
+    #[error("无效参数: {0}")]
+    InvalidParameter(String), // 参数值无效或超出范围
+    
+    #[error("模型未初始化: {0}")]
+    ModelNotInitialized(String), // AI模型未初始化
+    
+    #[error("模型初始化失败: {0}")]
+    ModelInitializationError(String), // AI模型初始化失败
+    
+    #[error("配置错误: {0}")]
+    ConfigError(String), // 配置文件相关错误
+    
+    #[error("验证错误: {0}")]
+    ValidationError(String), // 数据验证错误
+    
+    #[error("不支持的格式: {0}")]
+    UnsupportedFormat(String), // 不支持的文件格式
+    
+    #[error("序列化错误: {0}")]
+    SerializationError(String), // 序列化/反序列化错误
+    
     #[error("未知错误: {0}")]
     Unknown(String), // 其他未明确分类的错误
     

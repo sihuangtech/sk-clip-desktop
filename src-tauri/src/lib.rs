@@ -3,10 +3,17 @@
 // 声明项目模块
 pub mod commands; // Tauri 命令处理模块
 pub mod models;   // 数据结构和类型定义模块
+pub mod config;   // 配置管理模块
 pub mod file_manager; // 文件管理模块
-pub mod video_processor; // 视频处理模块
-pub mod document_parser; // 文档解析模块
-// pub mod ai_models; // AI 模型集成模块 (待实现)
+// 旧的单文件模块已被模块化结构替代
+// pub mod video_processor; // 已被 video 模块替代
+// pub mod document_parser; // 已被 document 模块替代  
+// pub mod ai_models; // 已被 ai 模块替代
+pub mod ai;       // AI 功能模块
+pub mod video;    // 视频处理模块
+pub mod document; // 文档处理模块
+pub mod utils;    // 工具函数模块
+pub mod model_manager; // 模型管理模块
 // pub mod task_manager; // 任务管理模块 (待实现)
 // pub mod timeline; // 时间线数据管理模块 (待实现)
 
@@ -32,7 +39,7 @@ impl From<anyhow::Error> for AppError {
 // 应用的入口点，由 Tauri 框架调用
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    info!("启动 Multisay 视频创作与翻译工具...");
+    info!("启动彩旗剪辑视频创作工具...");
 
     // Tauri 应用构建器
     tauri::Builder::default()
@@ -44,15 +51,50 @@ pub fn run() {
         .manage(AppState::default())
         // 注册 Tauri 命令
         .invoke_handler(tauri::generate_handler![
-            commands::greet, // 保留示例命令
+            // 基础命令
+            commands::greet,
+            commands::get_app_config,
+            commands::update_app_config,
+            
+            // 文件和视频处理命令
             commands::upload_video,
+            commands::get_video_info,
+            commands::extract_audio_from_video,
+            commands::trim_video_command,
+            commands::merge_videos_command,
+            commands::add_subtitles_command,
+            commands::resize_video_command,
+            commands::create_video_thumbnail,
+            
+            // 翻译和AI处理命令
             commands::translate_video,
             commands::get_translation_task,
             commands::check_task_output,
+            commands::recognize_speech,
+            commands::translate_text,
+            commands::synthesize_speech,
+            commands::get_ai_model_status,
+            commands::initialize_ai_models,
+            
+            // 文档处理命令
             commands::import_document,
             commands::get_supported_document_types,
             commands::convert_document_to_assets,
-            // 在这里注册其他命令...
+            
+            // 项目和时间线命令
+            commands::create_timeline_project,
+            commands::save_timeline_project,
+            commands::load_timeline_project,
+            commands::export_timeline_video,
+            
+            // 代理相关命令
+            commands::get_proxy_config,
+            commands::apply_proxy_profile,
+            commands::disable_proxy,
+            commands::test_proxy_connection,
+            commands::auto_detect_proxy,
+            commands::get_mirror_url,
+            commands::test_download_connection,
         ])
         // 运行应用
         .run(tauri::generate_context!())

@@ -1,0 +1,96 @@
+{
+  "proxy_settings": {
+    "enabled": false,
+    "type": "http",
+    "host": "",
+    "port": 0,
+    "username": "",
+    "password": "",
+    "bypass_list": [
+      "localhost",
+      "127.0.0.1",
+      "*.local"
+    ]
+  },
+  "proxy_profiles": {
+    "clash": {
+      "name": "Clash 代理",
+      "type": "http",
+      "host": "127.0.0.1",
+      "port": 7890,
+      "username": "",
+      "password": "",
+      "description": "Clash for Windows 默认配置"
+    },
+    "v2ray": {
+      "name": "V2Ray 代理",
+      "type": "socks5",
+      "host": "127.0.0.1",
+      "port": 1080,
+      "username": "",
+      "password": "",
+      "description": "V2Ray 默认配置"
+    },
+    "shadowsocks": {
+      "name": "Shadowsocks 代理",
+      "type": "socks5",
+      "host": "127.0.0.1",
+      "port": 1080,
+      "username": "",
+      "password": "",
+      "description": "Shadowsocks 默认配置"
+    },
+    "corporate": {
+      "name": "企业代理",
+      "type": "http",
+      "host": "proxy.company.com",
+      "port": 8080,
+      "username": "username",
+      "password": "password",
+      "description": "企业网络代理配置"
+    },
+    "custom": {
+      "name": "自定义代理",
+      "type": "http",
+      "host": "",
+      "port": 0,
+      "username": "",
+      "password": "",
+      "description": "用户自定义代理配置"
+    }
+  },
+  "download_settings": {
+    "auto_detect_proxy": true,
+    "fallback_to_direct": true,
+    "proxy_timeout_seconds": 30,
+    "test_urls": [
+      "https://www.google.com",
+      "https://huggingface.co",
+      "https://github.com"
+    ],
+    "retry_with_different_proxy": true,
+    "max_proxy_retries": 3
+  },
+  "mirror_settings": {
+    "use_mirrors_when_proxy_fails": true,
+    "preferred_mirrors": {
+      "huggingface": [
+        "https://hf-mirror.com",
+        "https://huggingface.co"
+      ],
+      "github": [
+        "https://ghproxy.com/https://github.com",
+        "https://github.com"
+      ],
+      "openai": [
+        "https://openaipublic.azureedge.net"
+      ]
+    }
+  },
+  "security_settings": {
+    "verify_ssl": true,
+    "allow_insecure_connections": false,
+    "custom_ca_bundle": "",
+    "user_agent": "MultisayApp/1.0.0"
+  }
+} 
