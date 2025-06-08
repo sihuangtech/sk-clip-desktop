@@ -30,6 +30,7 @@ pub async fn upload_video(path: String) -> Result<String, String> {
 }
 
 // 翻译视频 API
+#[allow(dead_code)]
 pub async fn translate_video(video_path: String, source_language: String, target_language: String) -> Result<String, String> {
     let args = serde_wasm_bindgen::to_value(&TranslateVideoArgs {
         video_path,
@@ -74,6 +75,7 @@ pub async fn get_app_config() -> Result<serde_json::Value, String> {
 }
 
 // 更新应用配置 API
+#[allow(dead_code)]
 pub async fn update_app_config(config: serde_json::Value) -> Result<(), String> {
     let args = serde_wasm_bindgen::to_value(&config)
         .map_err(|e| format!("序列化配置失败: {}", e))?;
@@ -88,6 +90,7 @@ pub async fn update_app_config(config: serde_json::Value) -> Result<(), String> 
 }
 
 // 获取AI模型状态 API
+#[allow(dead_code)]
 pub async fn get_ai_model_status() -> Result<serde_json::Value, String> {
     let result = invoke("get_ai_model_status", JsValue::NULL).await;
     
@@ -99,6 +102,7 @@ pub async fn get_ai_model_status() -> Result<serde_json::Value, String> {
 }
 
 // 初始化AI模型 API
+#[allow(dead_code)]
 pub async fn initialize_ai_models() -> Result<(), String> {
     let result = invoke("initialize_ai_models", JsValue::NULL).await;
     
