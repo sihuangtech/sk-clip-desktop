@@ -3,10 +3,10 @@
 // 模型下载器，负责从网络下载AI模型文件
 
 use std::path::PathBuf;
-use log::{info, warn, error};
+use log::info;
 use crate::models::AppError;
-use super::config::{ModelConfigManager, WhisperModelInfo};
-use super::proxy::{ProxyManager, ProxyInfo};
+use super::config::ModelConfigManager;
+use super::proxy::ProxyManager;
 
 /// 模型下载器
 pub struct ModelDownloader {

@@ -4,10 +4,10 @@
 
 use log::info;
 use serde_json::Value;
-use std::collections::HashMap;
+
 
 use crate::models::AppError;
-use crate::model_manager::{ModelConfigManager, ProxyManager, ProxyProfile};
+use crate::model_manager::{ModelConfigManager, ProxyManager};
 
 // 获取代理配置命令
 #[tauri::command]

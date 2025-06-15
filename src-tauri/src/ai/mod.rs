@@ -15,7 +15,7 @@ pub struct AiServiceManager {
     whisper: Option<WhisperProcessor>,
     translation: Option<TranslationProcessor>,
     tts: Option<TtsProcessor>,
-    config: AppConfig,
+    _config: AppConfig,
 }
 
 impl AiServiceManager {
@@ -24,7 +24,7 @@ impl AiServiceManager {
             whisper: None,
             translation: None,
             tts: None,
-            config,
+            _config: config,
         }
     }
 

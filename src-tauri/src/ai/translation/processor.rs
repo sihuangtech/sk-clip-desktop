@@ -1,6 +1,6 @@
 // src-tauri/src/ai/translation/processor.rs
 
-use log::{info, warn};
+use log::info;
 use crate::models::AppError;
 use super::{TranslationModel, TranslationResult};
 

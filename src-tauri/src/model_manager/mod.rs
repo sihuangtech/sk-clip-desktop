@@ -7,7 +7,7 @@ pub mod downloader;
 pub mod storage;
 pub mod proxy;
 
-pub use config::*;
-pub use downloader::*;
-pub use storage::*;
-pub use proxy::*; 
+pub use config::{ModelConfigManager, WhisperModelInfo, ModelConfig};
+pub use downloader::ModelDownloader;
+pub use storage::ModelStorageManager;
+pub use proxy::{ProxyManager, ProxyInfo, ProxyType, ProxyProfile}; 

@@ -1,7 +1,7 @@
 // src-tauri/src/ai/whisper/processor.rs
 
 use std::path::PathBuf;
-use log::{info, warn};
+use log::info;
 use crate::models::AppError;
 use super::{WhisperModel, SpeechRecognitionResult};
 

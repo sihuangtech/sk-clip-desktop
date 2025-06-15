@@ -6,7 +6,7 @@ use log::info;
 use std::path::PathBuf;
 
 use crate::models::AppError;
-use crate::ai::{AiServiceManager, SpeechRecognitionResult, TranslationResult, SpeechSynthesisResult};
+use crate::ai::{SpeechRecognitionResult, TranslationResult, SpeechSynthesisResult};
 
 // 初始化AI模型命令
 #[tauri::command]

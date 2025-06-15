@@ -1,7 +1,7 @@
 // src-tauri/src/ai/translation/model.rs
 
 use std::path::PathBuf;
-use log::{info, error};
+use log::info;
 use crate::models::AppError;
 
 /// 翻译模型实现

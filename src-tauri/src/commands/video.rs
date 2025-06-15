@@ -225,7 +225,7 @@ pub async fn get_video_info(video_path: String) -> Result<VideoMetadata, AppErro
 // 从视频提取音频命令
 #[tauri::command]
 pub async fn extract_audio_from_video(
-    video_path: String,
+    _video_path: String,
     output_audio_path: String,
 ) -> Result<String, AppError> {
     info!("调用 extract_audio_from_video 命令");
@@ -243,10 +243,10 @@ pub async fn extract_audio_from_video(
 // 裁剪视频命令
 #[tauri::command]
 pub async fn trim_video_command(
-    input_path: String,
+    _input_path: String,
     output_path: String,
-    start_time: f32,
-    end_time: f32,
+    _start_time: f32,
+    _end_time: f32,
     _preserve_quality: Option<bool>,
 ) -> Result<String, AppError> {
     info!("调用 trim_video_command 命令");
@@ -284,9 +284,9 @@ pub async fn merge_videos_command(
 // 添加字幕命令
 #[tauri::command]
 pub async fn add_subtitles_command(
-    input_path: String,
+    _input_path: String,
     output_path: String,
-    subtitle_path: String,
+    _subtitle_path: String,
 ) -> Result<String, AppError> {
     info!("调用 add_subtitles_command 命令");
     
@@ -303,7 +303,7 @@ pub async fn add_subtitles_command(
 // 调整视频大小命令
 #[tauri::command]
 pub async fn resize_video_command(
-    input_path: String,
+    _input_path: String,
     output_path: String,
     width: u32,
     height: u32,
@@ -324,7 +324,7 @@ pub async fn resize_video_command(
 // 创建视频缩略图命令
 #[tauri::command]
 pub async fn create_video_thumbnail(
-    video_path: String,
+    _video_path: String,
     output_path: String,
     timestamp: f32,
 ) -> Result<String, AppError> {

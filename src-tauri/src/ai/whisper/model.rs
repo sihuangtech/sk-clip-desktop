@@ -1,7 +1,7 @@
 // src-tauri/src/ai/whisper/model.rs
 
 use std::path::PathBuf;
-use log::{info, error};
+use log::info;
 use crate::models::AppError;
 
 /// Whisper模型实现

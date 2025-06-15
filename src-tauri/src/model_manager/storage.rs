@@ -3,7 +3,7 @@
 // 模型存储管理器，负责管理本地模型文件的存储和清理
 
 use std::path::PathBuf;
-use log::{info, warn, error};
+use log::info;
 use crate::models::AppError;
 use super::config::ModelConfigManager;
 
@@ -87,7 +87,6 @@ impl ModelStorageManager {
     /// 计算总存储使用量
     pub fn calculate_total_storage_usage(&self) -> Result<u64, AppError> {
         let models_dir = self.config_manager.get_models_dir();
-        let mut total_size = 0u64;
         
         fn calculate_dir_size(dir: &PathBuf) -> Result<u64, std::io::Error> {
             let mut size = 0u64;
@@ -108,7 +107,7 @@ impl ModelStorageManager {
             Ok(size)
         }
         
-        total_size = calculate_dir_size(&models_dir)
+        let total_size = calculate_dir_size(&models_dir)
             .map_err(|e| AppError::FileError(format!("计算目录大小失败: {}", e)))?;
         
         Ok(total_size)

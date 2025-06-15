@@ -122,7 +122,7 @@ impl VideoEditor {
     pub async fn preview_edit(
         &self,
         input_path: &PathBuf,
-        operations: Vec<EditOperation>,
+        _operations: Vec<EditOperation>,
     ) -> Result<PathBuf, AppError> {
         info!("预览编辑效果: {}", input_path.display());
         

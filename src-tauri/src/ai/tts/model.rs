@@ -1,7 +1,7 @@
 // src-tauri/src/ai/tts/model.rs
 
 use std::path::PathBuf;
-use log::{info, error};
+use log::info;
 use crate::models::AppError;
 
 /// TTS模型实现

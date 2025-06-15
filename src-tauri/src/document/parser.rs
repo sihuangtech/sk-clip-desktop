@@ -143,7 +143,7 @@ impl DocumentParser {
         }
 
         // 获取文件信息
-        let file_metadata = std::fs::metadata(document_path)
+        let _file_metadata = std::fs::metadata(document_path)
             .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
 
         // 根据文件扩展名确定文档类型

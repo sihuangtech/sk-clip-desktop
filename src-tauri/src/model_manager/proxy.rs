@@ -5,7 +5,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
-use log::{info, warn, error, debug};
+use log::{info, warn, debug};
 use crate::models::AppError;
 
 /// 代理配置结构

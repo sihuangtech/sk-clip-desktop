@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use crate::models::AppError;
-use log::{info, warn};
+use log::info;
 
 /// 视频处理任务类型
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
