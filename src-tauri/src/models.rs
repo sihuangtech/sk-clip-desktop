@@ -129,4 +129,160 @@ pub struct TranslateVideoArgs {
 //     pub task_id: String,
 // }
 
-// TODO: 根据实际需要为其他命令定义输入参数结构体 
+// TODO: 根据实际需要为其他命令定义输入参数结构体
+
+// ==================== 时间线项目数据结构 ====================
+
+/// 媒体类型
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum MediaType {
+    Video,
+    Audio,
+    Image,
+    Text,
+    Document,
+}
+
+/// 媒体素材
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MediaAsset {
+    pub id: String,
+    pub name: String,
+    pub path: String,
+    pub media_type: MediaType,
+    pub duration: f64,  // 时长（秒）
+    pub width: Option<u32>,
+    pub height: Option<u32>,
+}
+
+/// 时间线片段
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TimelineClip {
+    pub id: String,
+    pub asset_id: String,
+    pub track_id: String,
+    pub start_time: f64,      // 在时间线上的开始时间
+    pub duration: f64,         // 片段时长
+    pub in_point: f64,         // 素材入点
+    pub out_point: f64,        // 素材出点
+    pub opacity: f32,          // 透明度
+    pub volume: f32,           // 音量
+    pub muted: bool,           // 是否静音
+    pub locked: bool,          // 是否锁定
+    pub effects: Vec<String>,  // 应用的效果
+}
+
+/// 轨道类型
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "lowercase")]
+pub enum TrackType {
+    Video,
+    Audio,
+    Text,
+}
+
+/// 时间线轨道
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TimelineTrack {
+    pub id: String,
+    pub name: String,
+    pub track_type: TrackType,
+    pub index: u32,            // 轨道索引（0为最上方）
+    pub visible: bool,         // 是否可见
+    pub locked: bool,          // 是否锁定
+    pub muted: bool,           // 是否静音
+    pub clips: Vec<TimelineClip>,
+}
+
+/// 时间线项目
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TimelineProject {
+    pub id: String,
+    pub name: String,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+    pub updated_at: chrono::DateTime<chrono::Utc>,
+    pub duration: f64,         // 总时长
+    pub width: u32,            // 画布宽度
+    pub height: u32,           // 画布高度
+    pub frame_rate: f64,       // 帧率
+    pub tracks: Vec<TimelineTrack>,
+    pub assets: Vec<MediaAsset>,
+    pub markers: Vec<TimelineMarker>,
+}
+
+/// 时间线标记
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct TimelineMarker {
+    pub id: String,
+    pub time: f64,
+    pub name: String,
+    pub color: String,
+}
+
+impl TimelineProject {
+    pub fn new(name: String) -> Self {
+        let now = chrono::Utc::now();
+        Self {
+            id: Uuid::new_v4().to_string(),
+            name,
+            created_at: now,
+            updated_at: now,
+            duration: 0.0,
+            width: 1920,
+            height: 1080,
+            frame_rate: 30.0,
+            tracks: Vec::new(),
+            assets: Vec::new(),
+            markers: Vec::new(),
+        }
+    }
+
+    pub fn add_track(&mut self, track_type: TrackType, name: Option<String>) -> String {
+        let track_id = Uuid::new_v4().to_string();
+        let track_name = name.unwrap_or_else(|| {
+            let type_name = match track_type {
+                TrackType::Video => "视频",
+                TrackType::Audio => "音频",
+                TrackType::Text => "文本",
+            };
+            format!("{}轨道 {}", type_name, self.tracks.len() + 1)
+        });
+
+        let track = TimelineTrack {
+            id: track_id.clone(),
+            name: track_name,
+            track_type,
+            index: self.tracks.len() as u32,
+            visible: true,
+            locked: false,
+            muted: false,
+            clips: Vec::new(),
+        };
+
+        self.tracks.push(track);
+        self.updated_at = chrono::Utc::now();
+        track_id
+    }
+
+    pub fn add_asset(&mut self, asset: MediaAsset) -> String {
+        let id = asset.id.clone();
+        self.assets.push(asset);
+        self.updated_at = chrono::Utc::now();
+        id
+    }
+
+    pub fn update_duration(&mut self) {
+        let mut max_end = 0.0;
+        for track in &self.tracks {
+            for clip in &track.clips {
+                let clip_end = clip.start_time + clip.duration;
+                if clip_end > max_end {
+                    max_end = clip_end;
+                }
+            }
+        }
+        self.duration = max_end;
+        self.updated_at = chrono::Utc::now();
+    }
+} 

@@ -86,6 +86,8 @@ pub fn run() {
             commands::save_timeline_project,
             commands::load_timeline_project,
             commands::export_timeline_video,
+            commands::list_timeline_projects,
+            commands::delete_timeline_project,
             
             // 代理相关命令
             commands::get_proxy_config,
