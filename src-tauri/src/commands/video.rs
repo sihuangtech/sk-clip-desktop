@@ -225,39 +225,43 @@ pub async fn get_video_info(video_path: String) -> Result<VideoMetadata, AppErro
 // 从视频提取音频命令
 #[tauri::command]
 pub async fn extract_audio_from_video(
-    _video_path: String,
+    video_path: String,
     output_audio_path: String,
 ) -> Result<String, AppError> {
     info!("调用 extract_audio_from_video 命令");
-    
-    // TODO: 使用新的video模块提取音频
-    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-    
-    // 模拟创建音频文件
-    std::fs::write(&output_audio_path, b"mock audio data")
-        .map_err(|e| AppError::FileError(format!("创建音频文件失败: {}", e)))?;
-    
+
+    use crate::video::processor::VideoProcessor;
+    use std::path::PathBuf;
+
+    let processor = VideoProcessor::new();
+    let input = PathBuf::from(video_path);
+    let output = PathBuf::from(&output_audio_path);
+
+    processor.extract_audio(&input, &output).await?;
+
     Ok(output_audio_path)
 }
 
 // 裁剪视频命令
 #[tauri::command]
 pub async fn trim_video_command(
-    _input_path: String,
+    input_path: String,
     output_path: String,
-    _start_time: f32,
-    _end_time: f32,
+    start_time: f32,
+    end_time: f32,
     _preserve_quality: Option<bool>,
 ) -> Result<String, AppError> {
     info!("调用 trim_video_command 命令");
-    
-    // TODO: 使用新的video模块裁剪视频
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-    
-    // 模拟创建输出文件
-    std::fs::write(&output_path, b"mock trimmed video data")
-        .map_err(|e| AppError::FileError(format!("创建输出文件失败: {}", e)))?;
-    
+
+    use crate::video::processor::VideoProcessor;
+    use std::path::PathBuf;
+
+    let processor = VideoProcessor::new();
+    let input = PathBuf::from(input_path);
+    let output = PathBuf::from(&output_path);
+
+    processor.trim_video(&input, &output, start_time as f64, end_time as f64).await?;
+
     Ok(output_path)
 }
 
@@ -270,72 +274,81 @@ pub async fn merge_videos_command(
     _transition_duration: Option<f32>,
 ) -> Result<String, AppError> {
     info!("调用 merge_videos_command 命令，合并 {} 个视频", video_paths.len());
-    
-    // TODO: 使用新的video模块合并视频
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    
-    // 模拟创建输出文件
-    std::fs::write(&output_path, b"mock merged video data")
-        .map_err(|e| AppError::FileError(format!("创建输出文件失败: {}", e)))?;
-    
+
+    use crate::video::processor::VideoProcessor;
+    use std::path::PathBuf;
+
+    let processor = VideoProcessor::new();
+    let inputs: Vec<PathBuf> = video_paths.iter().map(PathBuf::from).collect();
+    let output = PathBuf::from(&output_path);
+
+    processor.merge_videos(&inputs, &output).await?;
+
     Ok(output_path)
 }
 
 // 添加字幕命令
 #[tauri::command]
 pub async fn add_subtitles_command(
-    _input_path: String,
+    input_path: String,
     output_path: String,
-    _subtitle_path: String,
+    subtitle_path: String,
 ) -> Result<String, AppError> {
     info!("调用 add_subtitles_command 命令");
-    
-    // TODO: 使用新的video模块添加字幕
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-    
-    // 模拟创建输出文件
-    std::fs::write(&output_path, b"mock video with subtitles data")
-        .map_err(|e| AppError::FileError(format!("创建输出文件失败: {}", e)))?;
-    
+
+    use crate::video::processor::VideoProcessor;
+    use std::path::PathBuf;
+
+    let processor = VideoProcessor::new();
+    let video = PathBuf::from(input_path);
+    let subtitle = PathBuf::from(subtitle_path);
+    let output = PathBuf::from(&output_path);
+
+    processor.add_subtitles(&video, &subtitle, &output).await?;
+
     Ok(output_path)
 }
 
 // 调整视频大小命令
 #[tauri::command]
 pub async fn resize_video_command(
-    _input_path: String,
+    input_path: String,
     output_path: String,
     width: u32,
     height: u32,
     _maintain_aspect_ratio: Option<bool>,
 ) -> Result<String, AppError> {
     info!("调用 resize_video_command 命令，目标尺寸: {}x{}", width, height);
-    
-    // TODO: 使用新的video模块调整视频大小
-    tokio::time::sleep(std::time::Duration::from_secs(4)).await;
-    
-    // 模拟创建输出文件
-    std::fs::write(&output_path, b"mock resized video data")
-        .map_err(|e| AppError::FileError(format!("创建输出文件失败: {}", e)))?;
-    
+
+    use crate::video::processor::VideoProcessor;
+    use std::path::PathBuf;
+
+    let processor = VideoProcessor::new();
+    let input = PathBuf::from(input_path);
+    let output = PathBuf::from(&output_path);
+
+    processor.resize_video(&input, &output, width, height).await?;
+
     Ok(output_path)
 }
 
 // 创建视频缩略图命令
 #[tauri::command]
 pub async fn create_video_thumbnail(
-    _video_path: String,
+    video_path: String,
     output_path: String,
     timestamp: f32,
 ) -> Result<String, AppError> {
     info!("调用 create_video_thumbnail 命令，时间戳: {}s", timestamp);
-    
-    // TODO: 使用新的video模块创建缩略图
-    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-    
-    // 模拟创建缩略图文件
-    std::fs::write(&output_path, b"mock thumbnail data")
-        .map_err(|e| AppError::FileError(format!("创建缩略图失败: {}", e)))?;
-    
+
+    use crate::video::processor::VideoProcessor;
+    use std::path::PathBuf;
+
+    let processor = VideoProcessor::new();
+    let input = PathBuf::from(video_path);
+    let output = PathBuf::from(&output_path);
+
+    processor.generate_thumbnail(&input, &output, timestamp as f64).await?;
+
     Ok(output_path)
 } 

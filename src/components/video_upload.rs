@@ -110,7 +110,6 @@ pub fn video_upload_component(props: &VideoUploadProps) -> Html {
     };
 
     html! {
-<<<<<<< HEAD
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title">{"📹 视频上传"}</h2>
@@ -157,65 +156,12 @@ pub fn video_upload_component(props: &VideoUploadProps) -> Html {
                                 <option value="fr">{"Français"}</option>
                                 <option value="de">{"Deutsch"}</option>
                                 <option value="ru">{"Русский"}</option>
-=======
-        <div class="video-upload-section">
-            <h2>
-                <span class="section-icon">{"🎬"}</span>
-                {"视频上传"}
-            </h2>
-            <p class="section-description">
-                {"支持 MP4、AVI、MOV 等常见视频格式，文件大小不超过 2GB"}
-            </p>
-            
-            if is_uploading {
-                <LoadingSpinner message={"正在处理视频文件...".to_string()} />
-            } else {
-                <div class="upload-controls">
-                    <div class="file-upload-area">
-                        <input 
-                            type="file" 
-                            ref={file_input_ref.clone()} 
-                            accept="video/*" 
-                            onchange={on_video_select}
-                            disabled={is_uploading}
-                            id="video-file-input"
-                        />
-                        <label for="video-file-input" class="file-upload-label">
-                            <div class="upload-icon">{"📁"}</div>
-                            <div class="upload-text">
-                                <span class="upload-primary">{"点击选择视频文件"}</span>
-                                <span class="upload-secondary">{"或拖拽文件到此区域"}</span>
-                            </div>
-                        </label>
-                    </div>
-                    
-                    <div class="language-selection">
-                        <div class="language-group">
-                            <label for="source-language">
-                                <span class="label-icon">{"🗣️"}</span>
-                                {"源语言"}
-                            </label>
-                            <select id="source-language" onchange={on_source_language_change}>
-                                {
-                                    SUPPORTED_LANGUAGES.iter().map(|(code, name)| {
-                                        html! {
-                                            <option 
-                                                value={*code} 
-                                                selected={&*props.source_language == code}
-                                            >
-                                                {name}
-                                            </option>
-                                        }
-                                    }).collect::<Html>()
-                                }
->>>>>>> 55e27c8 (重构样式文件，添加全局样式和组件样式，优化视频上传和翻译面板的用户界面，更新 API 以支持应用配置和 AI 模型状态，清理未使用的代码，增强响应式设计和动画效果。)
                             </select>
                         </div>
                         
                         <div class="language-arrow">{"→"}</div>
                         
                         <div class="language-group">
-<<<<<<< HEAD
                             <label class="form-label">{"目标语言"}</label>
                             <select 
                                 class="form-select"
@@ -230,30 +176,10 @@ pub fn video_upload_component(props: &VideoUploadProps) -> Html {
                                 <option value="fr">{"Français"}</option>
                                 <option value="de">{"Deutsch"}</option>
                                 <option value="ru">{"Русский"}</option>
-=======
-                            <label for="target-language">
-                                <span class="label-icon">{"🎯"}</span>
-                                {"目标语言"}
-                            </label>
-                            <select id="target-language" onchange={on_target_language_change}>
-                                {
-                                    SUPPORTED_LANGUAGES.iter().map(|(code, name)| {
-                                        html! {
-                                            <option 
-                                                value={*code} 
-                                                selected={&*props.target_language == code}
-                                            >
-                                                {name}
-                                            </option>
-                                        }
-                                    }).collect::<Html>()
-                                }
->>>>>>> 55e27c8 (重构样式文件，添加全局样式和组件样式，优化视频上传和翻译面板的用户界面，更新 API 以支持应用配置和 AI 模型状态，清理未使用的代码，增强响应式设计和动画效果。)
                             </select>
                         </div>
                     </div>
 
-<<<<<<< HEAD
                     // 状态显示和操作按钮
                     <div class="upload-status">
                         {
@@ -330,30 +256,6 @@ pub fn video_upload_component(props: &VideoUploadProps) -> Html {
                             }
                         }
                     </div>
-=======
-                    // 显示当前选择的文件信息
-                    {match &*props.app_state {
-                        AppState::Ready(path) => html! {
-                            <div class="file-info">
-                                <div class="file-info-icon">{"✅"}</div>
-                                <div class="file-info-content">
-                                    <div class="file-info-title">{"视频文件已准备就绪"}</div>
-                                    <div class="file-info-path">{path}</div>
-                                </div>
-                            </div>
-                        },
-                        AppState::Error(error) => html! {
-                            <div class="file-error">
-                                <div class="file-error-icon">{"❌"}</div>
-                                <div class="file-error-content">
-                                    <div class="file-error-title">{"上传失败"}</div>
-                                    <div class="file-error-message">{error}</div>
-                                </div>
-                            </div>
-                        },
-                        _ => html! {}
-                    }}
->>>>>>> 55e27c8 (重构样式文件，添加全局样式和组件样式，优化视频上传和翻译面板的用户界面，更新 API 以支持应用配置和 AI 模型状态，清理未使用的代码，增强响应式设计和动画效果。)
                 </div>
             </div>
         </div>

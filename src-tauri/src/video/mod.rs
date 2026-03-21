@@ -4,7 +4,7 @@ pub mod converter;
 pub mod analyzer;
 
 // 重新导出主要类型和功能
-pub use processor::{VideoProcessor, VideoProcessingTask};
+pub use processor::{VideoProcessor, VideoProcessingTask, VideoInfo};
 pub use editor::{VideoEditor, EditOperation};
 pub use converter::{VideoConverter, ConversionOptions};
 pub use analyzer::{VideoAnalyzer, VideoMetadata};
