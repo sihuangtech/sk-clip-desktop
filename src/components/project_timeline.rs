@@ -314,7 +314,7 @@ pub fn project_timeline_component(_props: &ProjectTimelineProps) -> Html {
                 let time = i as f32 * 10.0;
                 let x = time * project.zoom_level;
                 html! {
-                    <div 
+                    <div
                         class="time-marker"
                         style={format!("left: {}px;", x)}
                     >
@@ -354,7 +354,7 @@ pub fn project_timeline_component(_props: &ProjectTimelineProps) -> Html {
             let track_elements: Vec<Html> = track.elements.iter().map(|element| {
                 let element_width = element.duration * project.zoom_level;
                 let element_left = element.start_time * project.zoom_level;
-                
+
                 html! {
                     <div
                         class={classes!("timeline-element", if element.selected { Some("selected") } else { None })}
@@ -379,15 +379,15 @@ pub fn project_timeline_component(_props: &ProjectTimelineProps) -> Html {
                     <div class="track-header">
                         <div class="track-name">{&track.name}</div>
                         <div class="track-controls">
-                            <button 
+                            <button
                                 class={classes!("track-mute-btn", if track.muted { Some("active") } else { None })}
                                 title="静音"
                             >{"M"}</button>
-                            <button 
+                            <button
                                 class={classes!("track-lock-btn", if track.locked { Some("active") } else { None })}
                                 title="锁定"
                             >{"L"}</button>
-                            <button 
+                            <button
                                 class="track-add-btn"
                                 onclick={add_element_callback}
                                 title="添加元素"

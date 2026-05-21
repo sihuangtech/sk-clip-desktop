@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 use std::collections::HashMap;
 use thiserror::Error;
+use uuid::Uuid;
 
 // 视频翻译任务状态枚举
 // 表示一个视频翻译任务的当前处理阶段

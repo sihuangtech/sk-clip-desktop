@@ -1,5 +1,5 @@
 [package]
-name = "caiqi-clip"
+name = "sk-clip"
 version = "0.1.0"
 description = "彩旗剪辑 - 专业视频剪辑与翻译工具"
 authors = ["SK Studio"]
@@ -11,7 +11,7 @@ edition = "2021"
 # The `_lib` suffix may seem redundant but it is necessary
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "caiqi_clip_lib"
+name = "sk_clip_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
@@ -22,11 +22,11 @@ tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-uuid = { version = "1.4", features = ["v4", "serde"] }
+uuid = { version = "1.23", features = ["v4", "serde"] }
 tokio = { version = "1", features = ["full"] }
 futures = "0.3"
 thiserror = "2.0"
-tempfile = "3.8"
+tempfile = "3.27"
 log = "0.4"
 dotenv = "0.15"
 dirs = "6.0"
@@ -37,29 +37,28 @@ tauri-plugin-fs = "2"
 tauri-plugin-shell = "2"
 
 # AI模型相关依赖
-candle-core = "0.9"
-candle-nn = "0.9"
-candle-transformers = "0.9"
-hf-hub = "0.4"
-tokenizers = "0.21"
+candle-core = "0.10"
+candle-nn = "0.10"
+candle-transformers = "0.10"
+hf-hub = "0.5"
+tokenizers = "0.23"
 
 # 音频处理
-rodio = "0.20"
+rodio = "0.22"
 hound = "3.5"
-symphonia = { version = "0.5", features = ["all"] }
+symphonia = { version = "0.6", features = ["all"] }
 
 # 视频处理 (通过命令行调用FFmpeg)
 # ffmpeg-next = "7.1"  # 暂时移除，使用命令行方式
 
 # 文档处理
-zip = "4.0"
-quick-xml = "0.37"
+zip = "8.6"
+quick-xml = "0.40"
 pulldown-cmark = "0.13"
-lopdf = "0.36"
+lopdf = "0.40"
 
 # HTTP客户端用于下载模型
-reqwest = { version = "0.12", features = ["json", "stream"] }
+reqwest = { version = "0.13", features = ["json", "stream"] }
 
 # 日志相关
 env_logger = "0.11"
-

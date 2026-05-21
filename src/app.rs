@@ -9,6 +9,7 @@ use crate::components::{
     DocumentImportComponent, 
     TranslationPanelComponent, 
     ProjectTimelineComponent,
+    SettingsPanel,
 };
 use crate::types::AppState;
 
@@ -19,6 +20,7 @@ pub fn app() -> Html {
     let target_language = use_state(|| "en".to_string());
     let is_mobile = use_state(|| false);
     let selected_material_tab = use_state(|| "video".to_string());
+    let show_settings = use_state(|| false);
 
     // 检测移动设备
     {
@@ -57,6 +59,20 @@ pub fn app() -> Html {
         let app_state = app_state.clone();
         Callback::from(move |_: MouseEvent| {
             app_state.set(AppState::Idle);
+        })
+    };
+
+    let on_open_settings = {
+        let show_settings = show_settings.clone();
+        Callback::from(move |_: MouseEvent| {
+            show_settings.set(true);
+        })
+    };
+
+    let on_close_settings = {
+        let show_settings = show_settings.clone();
+        Callback::from(move |_| {
+            show_settings.set(false);
         })
     };
 
@@ -147,7 +163,7 @@ pub fn app() -> Html {
                         <span>{"📤"}</span>
                         <span>{"导出"}</span>
                     </button>
-                    <button class="header-btn" title="项目设置">
+                    <button class="header-btn" title="项目设置" onclick={on_open_settings}>
                         <span>{"⚙️"}</span>
                         <span>{"设置"}</span>
                     </button>
@@ -252,6 +268,10 @@ pub fn app() -> Html {
                     app_state={app_state.clone()}
                 />
             </footer>
+
+            if *show_settings {
+                <SettingsPanel on_close={on_close_settings} />
+            }
         </div>
     }
 }

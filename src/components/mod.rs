@@ -12,4 +12,4 @@ pub use video_upload::VideoUploadComponent;
 pub use document_import::DocumentImportComponent;
 pub use translation_panel::TranslationPanelComponent;
 pub use project_timeline::ProjectTimelineComponent;
-// pub use settings_panel::SettingsPanel; // 暂时未使用，注释掉避免警告
+pub use settings_panel::SettingsPanel;

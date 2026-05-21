@@ -77,7 +77,9 @@ pub async fn get_app_config() -> Result<serde_json::Value, String> {
 // 更新应用配置 API
 #[allow(dead_code)]
 pub async fn update_app_config(config: serde_json::Value) -> Result<(), String> {
-    let args = serde_wasm_bindgen::to_value(&config)
+    let args = serde_wasm_bindgen::to_value(&serde_json::json!({
+        "config": config
+    }))
         .map_err(|e| format!("序列化配置失败: {}", e))?;
     
     let result = invoke("update_app_config", args).await;

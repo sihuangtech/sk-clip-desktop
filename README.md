@@ -1,88 +1,164 @@
-# 彩旗剪辑
+# SK Clip
 
-这是一个基于 Tauri 和 Rust 构建的强大跨平台桌面应用，旨在彻底革新视频内容的创作方式。它集成了先进的视频翻译、多样化的文档内容导入、灵活的视频文件插入与基础剪辑以及智能语音合成功能，特别优化用于将 PPT、Markdown 或 PDF 文档内容与视频素材无缝结合，高效制作高质量的演示汇报、在线课程或讲解视频。
+[简体中文](README.zh.md)
 
-本工具致力于提供离线、私密的创作环境，所有敏感的视频和文档处理均在您的本地计算机上完成，无需上传到云端。
+SK Clip is a cross-platform desktop application built with Tauri, Rust, and Yew. It is designed for document-driven video creation: combining local video assets, presentation or document content, subtitles, translation, and speech synthesis into a single offline workflow for presentations, online courses, training videos, and narrated explainers.
 
-## 功能特点
+The project emphasizes local-first processing. Sensitive media and documents are intended to stay on the user's machine instead of being uploaded to cloud services.
 
-- **灵活的视频插入与基础剪辑**：
-  - 允许用户导入本地视频文件，作为主视频或插入素材。
-  - 提供剪裁、分割、调整时长等基础视频剪辑功能，方便对导入的视频素材进行处理。
-  - 简化视频素材的管理和准备。
+## Features
 
-- **可视化时间线编辑器**：
-  - 提供直观的时间线界面，允许用户自由拖拽、排序和组合文档内容、视频片段和生成的语音/字幕。
-  - 精确控制各个元素的出现时间和时长，实现精细化的视频结构编排。
+- **Video import and basic editing**
+  - Import local video files as primary media or insert clips.
+  - Prepare clips with basic trimming, splitting, duration adjustment, resizing, subtitle overlay, audio extraction, thumbnails, and merging through FFmpeg.
+  - Keep source media organized for a document-driven editing workflow.
 
-- **多样化文档导入与整合**：
-  - 轻松导入 PPTX, Markdown (.md), PDF 等格式的文档文件。
-  - 应用能够智能解析文档内容，例如将 PPT 页面或 PDF 页转换为可用于视频的图像或片段，将 Markdown 转换为排版好的文本或幻灯片。
-  - 将文档内容作为视觉元素或背景，与视频片段结合。
+- **Visual timeline editor**
+  - Arrange video, audio, document, subtitle, and generated speech tracks on a timeline.
+  - Drag timeline elements and control their start time and duration.
+  - Build structured videos from document pages, imported clips, subtitles, and synthesized narration.
 
-- **智能多语言语音合成 (TTS)**：
-  - 用户可以直接输入或粘贴文本，应用能将其合成为高质量的多语言语音。*（将集成离线免费开源的 [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) 模型实现此功能）*
-  - 合成的语音可以精确同步到视频的特定片段或文档内容的展示时段。
-  - 规划支持多种音色和风格，以匹配不同的内容需求。
+- **Document import and integration**
+  - Planned support for PPTX, Markdown, PDF, and DOCX imports.
+  - Parse document content into pages, text, images, tables, and layout metadata.
+  - Convert document content into visual assets that can be synchronized with video clips.
 
-- **高精度视频翻译**：
-  - 支持智能识别视频中的语音，并将其翻译成多种目标语言（目前规划支持中文、英文、日语、韩语，未来可扩展）。*（将结合离线免费开源的语音识别和文本翻译技术实现此功能。语音识别考虑集成 [Whisper](https://github.com/openai/whisper) 或其变种；文本翻译将采用 [Helsinki-NLP](https://github.com/Helsinki-NLP) 的开源模型，具体集成方式（可能结合 [CTranslate2](https://github.com/OpenNMT/CTranslate2) 等推理引擎及其 Rust bindings）待进一步评估确定。）*
-  - 翻译过程尽量保留原始说话人的音色、语速和情感，提供更自然、更具表现力的翻译结果。
-  - 支持生成翻译字幕和配音。
+- **Local text-to-speech**
+  - Choose from multiple local open-source TTS engines in the app settings.
+  - Lightweight reading engines include Piper, KittenTTS, Kokoro ONNX, and sherpa-onnx.
+  - Advanced voice cloning or dubbing engines can be added through GPT-SoVITS, F5-TTS, or similar sidecar integrations.
 
-- **完全离线处理**：
-  - 所有计算密集型任务，包括视频分析、翻译、语音合成和最终渲染，都在本地设备上执行。
-  - 最大程度保护用户隐私和数据安全。
-  - 不受网络速度和稳定性的限制。
+- **Video translation workflow**
+  - Planned local speech recognition, text translation, subtitles, and dubbed audio.
+  - ASR is planned around Whisper or compatible local models.
+  - Translation is planned around open-source MT models such as Helsinki-NLP/OPUS-MT, potentially through CTranslate2 or Rust-friendly inference runtimes.
 
-- **跨平台兼容性**：
-  - 基于 Tauri 框架开发，确保应用在 Windows, macOS, Linux 三大主流操作系统上提供一致的体验和性能。
+- **Offline-first and cross-platform**
+  - Built on Tauri for Windows, macOS, and Linux.
+  - Heavy processing is designed to run locally for privacy and predictable performance.
 
-## 技术栈
+## Tech Stack
 
-- 前端：使用高性能的 Rust WebAssembly 框架 Yew 构建交互式用户界面。
-- 后端：强大的 Rust 语言结合 Tauri 框架处理底层系统交互、文件操作和复杂的视频/文档处理逻辑。
-- 视频/文档处理：计划集成 FFmpeg (处理音视频编解码、格式转换、剪辑等), Pandoc (处理 Markdown/PDF 转换) 及其他相关的开源库，实现强大的内容处理能力。
-- AI 模型：
-  - **语音合成 (TTS)**：[GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) (离线免费开源，用于文本到语音的生成)
-  - **语音识别 (ASR)**：规划集成 [Whisper](https://github.com/openai/whisper) 或其变种 (离线免费开源，用于将语音转为文本)。
-  - **文本翻译 (MT)**：将采用 [Helsinki-NLP](https://github.com/Helsinki-NLP) 的开源模型 (离线免费开源)，具体集成方式和用于 Rust 的库（可能结合 [CTranslate2](https://github.com/OpenNMT/CTranslate2) 等推理引擎及其 Rust bindings）待进一步评估确定。
+- Frontend: Rust, WebAssembly, Yew, Trunk.
+- Desktop/backend: Tauri 2 and Rust.
+- Video processing: FFmpeg command-line integration.
+- Document processing: Rust parsers and planned conversion tooling.
+- AI models:
+  - TTS: configurable local engines, from lightweight ONNX engines to voice-cloning sidecars.
+  - ASR: planned Whisper-compatible local recognition.
+  - MT: planned open-source machine translation models.
 
-## 快速开始
+## Local Open-Source TTS Options
 
-请参考 [开发环境配置](docs/development-setup.md) 文档，了解如何在您的操作系统上搭建开发环境。
+The app includes built-in metadata for several local TTS engine candidates. Users can select the default TTS engine from the settings panel. The current implementation wires the configuration and UI entry point first; actual inference backends will be implemented incrementally.
 
-## 运行应用
+| Engine | Role | Footprint | License Notes | Best Fit |
+| --- | --- | --- | --- | --- |
+| [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | Ultra-light rule-based engine | A few MB, CPU only | GPL-3.0 | Fallback narration, debugging, broad language coverage |
+| [Flite](https://github.com/festvox/flite) | Ultra-light embeddable engine | Small CPU runtime | BSD-like | English fallback narration, low-resource devices |
+| [TinyTTS](https://github.com/tronghieuit/tiny-tts) | Ultra-light neural TTS | About 3.4 MB ONNX, CPU | MIT | English lightweight experiments, very small packages |
+| [KittenTTS](https://github.com/KittenML/KittenTTS) | Lightweight neural TTS | About 25-80 MB ONNX, CPU | Apache-2.0 | Natural local narration, desktop default candidate |
+| [Piper](https://github.com/rhasspy/piper) | Lightweight neural TTS | Voice packages downloaded as needed, CPU | MIT / GPL branches require separate review | Stable offline narration, default engine candidate |
+| [Kokoro ONNX](https://github.com/thewh1teagle/kokoro-onnx) | Mid-light high-quality neural TTS | Quantized models around 80 MB, CPU capable | Apache-2.0 | More natural explainer narration |
+| [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) | Cross-platform ONNX runtime layer | Depends on selected model, CPU capable | Apache-2.0 | Unified local runtime for Piper, Kokoro, VITS, and related models |
+| [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) | Voice cloning / advanced dubbing | Heavier, best as Python sidecar, GPU optional | MIT | Video translation dubbing and few-shot voice cloning |
+| [F5-TTS](https://github.com/SWivid/F5-TTS) | Voice cloning / advanced dubbing | Heavier, best as Python sidecar, GPU optional | Code is MIT; pretrained weights require separate review | High-quality cloning experiments and non-default advanced engine |
 
-在项目根目录执行以下命令：
+Recommended integration path:
+
+1. Default lightweight narration: Piper, KittenTTS, or Kokoro ONNX.
+2. Cross-platform runtime layer: evaluate sherpa-onnx for managing ONNX-based models.
+3. Advanced voice cloning: integrate GPT-SoVITS or F5-TTS as sidecar services or CLI commands rather than embedding PyTorch directly in the Rust process.
+
+## Development, Build, and Packaging
+
+### Prerequisites
+
+This project is a Tauri 2 + Yew WebAssembly app. Install Rust, the WASM target, Tauri CLI, and Trunk before development:
+
+```bash
+rustup update stable
+rustup target add wasm32-unknown-unknown
+cargo install tauri-cli trunk
+```
+
+The repository defaults to the Shanghai Jiao Tong University SJTUG crates.io sparse index in `.cargo/config.toml`:
+
+```toml
+[source.crates-io]
+replace-with = "sjtug"
+
+[source.sjtug]
+registry = "sparse+https://mirrors.sjtug.sjtu.edu.cn/crates.io-index/"
+```
+
+### Run in Development
+
+From the repository root:
 
 ```bash
 cargo tauri dev
 ```
 
-构建发布版本：
+This starts the Trunk/Yew frontend dev server and opens the Tauri desktop window.
+
+### Build Checks
+
+Check the full Rust workspace:
+
+```bash
+cargo check --workspace
+```
+
+Build frontend assets:
+
+```bash
+trunk build --release
+```
+
+Build the Rust workspace:
+
+```bash
+cargo build --workspace
+```
+
+### Package a Release
+
+Build distributable desktop bundles:
 
 ```bash
 cargo tauri build
 ```
 
-## 使用说明
+Generated artifacts are usually placed under:
 
-请参考 [使用指南](docs/usage.md) 文档，了解如何使用本工具的各项功能进行视频创作。
+```text
+src-tauri/target/release/bundle/
+```
 
-## 更新 Rust 和 Cargo
+The exact output depends on the host platform and Tauri configuration. Examples include `.app`, `.dmg`, `.msi`, `.deb`, and `.AppImage`.
 
-请参考 [更新指南](docs/updating-rust.md) 文档。
+### Upgrade Dependencies
 
-## 环境安装故障排除
+```bash
+rustup update stable
+cargo install cargo-edit
+cargo upgrade --incompatible allow --recursive true
+cargo upgrade --manifest-path src-tauri/Cargo.toml --incompatible allow --recursive true
+cargo update
+cargo check --workspace
+```
 
-请参考 [故障排除指南](docs/troubleshooting.md) 文档。
+## Usage
 
-## 当前限制
+See [docs/usage.md](docs/usage.md) for workflow-level usage notes.
 
-- 当前版本为原型演示，部分高级功能（如可视化时间线、复杂剪辑）和核心视频/文档/语音处理功能为模拟或基础实现，主要用于展示应用框架和流程。
-- AI 模型集成和口型同步技术尚在设计和初步研究阶段。
+## Current Status
 
-## 许可证
+- This is still a prototype. Several advanced features, including full timeline rendering, document-to-video conversion, speech recognition, translation, and real TTS inference, are partially implemented or mocked.
+- Core video utility commands use FFmpeg, but the complete AI-assisted video translation pipeline is still under active design.
+- Model integration, voice cloning, and lip-sync are planned but not production-ready.
 
-此项目采用 MIT 许可证 - 详情请参阅 LICENSE 文件
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
