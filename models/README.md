@@ -4,7 +4,7 @@
 
 ## 目录结构
 
-```
+```text
 models/
 ├── whisper/          # Whisper 语音识别模型
 │   ├── base/         # 基础模型 (74MB)

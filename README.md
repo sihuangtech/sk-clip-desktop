@@ -107,7 +107,7 @@ cd src-tauri && cargo update
 
 ## Project Structure
 
-```
+```text
 sk-clip-desktop/
 ├── src/                    # React + TypeScript frontend
 │   ├── api/               # Tauri API wrappers
