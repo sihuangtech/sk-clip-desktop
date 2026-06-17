@@ -1,56 +1,14 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8" />
-    <title>彩旗剪辑 - 专业视频剪辑与翻译工具</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link data-trunk rel="css" href="src/styles/main.css" />
-    <style>
-        /* 只保留加载页面的样式 */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background-color: #f8fafc;
-        }
-        
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-size: 18px;
-            color: #475569;
-            background: #f8fafc;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #e2e8f0;
-            border-top: 4px solid #3b82f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* 隐藏加载页面当应用启动后 */
-        .app-loaded .loading {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-    <div class="loading">
-        <div>
-            <div class="spinner"></div>
-            正在加载彩旗剪辑...
-        </div>
-    </div>
-</body>
-</html> 
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>彩旗剪辑</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,6 +1,89 @@
-/dist/
-/target/
-/Cargo.lock
-.DS_Store
+# ==================== Dependencies ====================
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lockb
+
+# ==================== Build Output ====================
+dist/
+target/
+out/
+*.tgz
+
+# ==================== Rust ====================
+Cargo.lock
+*.rs.bk
+*.pdb
+
+# ==================== Tauri ====================
+src-tauri/target/
+src-tauri/Cargo.lock
+src-tauri/icons/*.png
+!src-tauri/icons/icon.png
+src-tauri/gen/
+
+# ==================== IDE & Editor ====================
 .vscode/
-.cargo/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ==================== OS Generated ====================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ==================== Environment ====================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# ==================== Logs ====================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+bun-debug.log*
+logs/
+*.log.*
+
+# ==================== Testing ====================
+coverage/
+.nyc_output/
+*.lcov
+
+# ==================== TypeScript & Vite ====================
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+.vite/
+
+# ==================== Cache ====================
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+
+# ==================== Temporary ====================
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ==================== Misc ====================
+*.local

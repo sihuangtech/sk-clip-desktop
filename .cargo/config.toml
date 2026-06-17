@@ -1,5 +1,0 @@
-[source.crates-io]
-replace-with = 'sjtug'
-
-[source.sjtug]
-registry = "sparse+https://mirrors.sjtug.sjtu.edu.cn/crates.io-index/"

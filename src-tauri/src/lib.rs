@@ -1,104 +1,76 @@
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-
 // 声明项目模块
-pub mod commands; // Tauri 命令处理模块
-pub mod models;   // 数据结构和类型定义模块
-pub mod config;   // 配置管理模块
-pub mod file_manager; // 文件管理模块
-// 旧的单文件模块已被模块化结构替代
-// pub mod video_processor; // 已被 video 模块替代
-// pub mod document_parser; // 已被 document 模块替代  
-// pub mod ai_models; // 已被 ai 模块替代
-pub mod ai;       // AI 功能模块
-pub mod video;    // 视频处理模块
-pub mod document; // 文档处理模块
-pub mod utils;    // 工具函数模块
-pub mod model_manager; // 模型管理模块
-// pub mod task_manager; // 任务管理模块 (待实现)
-// pub mod timeline; // 时间线数据管理模块 (待实现)
+pub mod commands;
+pub mod models;
+pub mod config;
+pub mod file_manager;
+pub mod ai;
+pub mod video;
+pub mod document;
+pub mod utils;
+pub mod model_manager;
 
-// 从 modules 中导入需要直接在 lib.rs 中使用的项
-use models::{AppState, AppError}; // 从 models 模块导入 AppState 和 AppError
+use models::{AppState, AppError};
 use log::info;
-use anyhow;
 
-// 实现从AppError到tauri::Error的转换
 impl From<AppError> for tauri::Error {
     fn from(err: AppError) -> Self {
         tauri::Error::Anyhow(anyhow::anyhow!(err.to_string()))
     }
 }
 
-// 实现从anyhow::Error到AppError的转换
 impl From<anyhow::Error> for AppError {
     fn from(err: anyhow::Error) -> Self {
         AppError::Unknown(err.to_string())
     }
 }
 
-// 应用的入口点，由 Tauri 框架调用
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     info!("启动彩旗剪辑视频创作工具...");
 
-    // Tauri 应用构建器
     tauri::Builder::default()
-        // 初始化插件
+        .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
-        // 管理应用状态，可以在多个命令中共享
         .manage(AppState::default())
-        // 注册 Tauri 命令
         .invoke_handler(tauri::generate_handler![
-            // 基础命令
-            commands::greet,
-            commands::get_app_config,
-            commands::update_app_config,
-            
-            // 文件和视频处理命令
-            commands::upload_video,
-            commands::get_video_info,
-            commands::extract_audio_from_video,
-            commands::trim_video_command,
-            commands::merge_videos_command,
-            commands::add_subtitles_command,
-            commands::resize_video_command,
-            commands::create_video_thumbnail,
-            
-            // 翻译和AI处理命令
-            commands::translate_video,
-            commands::get_translation_task,
-            commands::check_task_output,
-            commands::recognize_speech,
-            commands::translate_text,
-            commands::synthesize_speech,
-            commands::get_ai_model_status,
-            commands::initialize_ai_models,
-            
-            // 文档处理命令
-            commands::import_document,
-            commands::get_supported_document_types,
-            commands::convert_document_to_assets,
-            
-            // 项目和时间线命令
-            commands::create_timeline_project,
-            commands::save_timeline_project,
-            commands::load_timeline_project,
-            commands::export_timeline_video,
-            commands::list_timeline_projects,
-            commands::delete_timeline_project,
-            
-            // 代理相关命令
-            commands::get_proxy_config,
-            commands::apply_proxy_profile,
-            commands::disable_proxy,
-            commands::test_proxy_connection,
-            commands::auto_detect_proxy,
-            commands::get_mirror_url,
-            commands::test_download_connection,
+            commands::basic::greet,
+            commands::basic::get_app_config,
+            commands::basic::update_app_config,
+            commands::video::upload_video,
+            commands::video::get_video_info,
+            commands::video::extract_audio_from_video,
+            commands::video::trim_video_command,
+            commands::video::merge_videos_command,
+            commands::video::add_subtitles_command,
+            commands::video::resize_video_command,
+            commands::video::create_video_thumbnail,
+            commands::ai::translate_video,
+            commands::ai::get_translation_task,
+            commands::ai::check_task_output,
+            commands::ai::recognize_speech,
+            commands::ai::translate_text,
+            commands::ai::synthesize_speech,
+            commands::ai::get_ai_model_status,
+            commands::ai::initialize_ai_models,
+            commands::document::import_document,
+            commands::document::get_supported_document_types,
+            commands::document::convert_document_to_assets,
+            commands::timeline::create_timeline_project,
+            commands::timeline::save_timeline_project,
+            commands::timeline::load_timeline_project,
+            commands::timeline::export_timeline_video,
+            commands::timeline::list_timeline_projects,
+            commands::timeline::delete_timeline_project,
+            commands::proxy::get_proxy_config,
+            commands::proxy::apply_proxy_profile,
+            commands::proxy::disable_proxy,
+            commands::proxy::test_proxy_connection,
+            commands::proxy::auto_detect_proxy,
+            commands::proxy::get_mirror_url,
+            commands::proxy::test_download_connection,
         ])
-        // 运行应用
         .run(tauri::generate_context!())
         .expect("运行 Tauri 应用时出错");
 }

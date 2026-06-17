@@ -35,30 +35,17 @@ chrono = { version = "0.4", features = ["serde"] }
 tauri-plugin-dialog = "2"
 tauri-plugin-fs = "2"
 tauri-plugin-shell = "2"
-
-# AI模型相关依赖
 candle-core = "0.10"
 candle-nn = "0.10"
 candle-transformers = "0.10"
 hf-hub = "0.5"
 tokenizers = "0.23"
-
-# 音频处理
 rodio = "0.22"
 hound = "3.5"
 symphonia = { version = "0.6", features = ["all"] }
-
-# 视频处理 (通过命令行调用FFmpeg)
-# ffmpeg-next = "7.1"  # 暂时移除，使用命令行方式
-
-# 文档处理
 zip = "8.6"
 quick-xml = "0.40"
 pulldown-cmark = "0.13"
 lopdf = "0.40"
-
-# HTTP客户端用于下载模型
 reqwest = { version = "0.13", features = ["json", "stream"] }
-
-# 日志相关
 env_logger = "0.11"
