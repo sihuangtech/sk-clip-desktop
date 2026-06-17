@@ -1,4 +1,4 @@
-# SK Clip (彩旗剪辑)
+# 彩旗剪辑
 
 [English](README.md)
 
