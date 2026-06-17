@@ -1,6 +1,6 @@
 # 彩旗剪辑
 
-[English](README.md)
+[English](README.md) | [日本語](README.ja.md)
 
 彩旗剪辑是一款跨平台桌面视频创作应用。基于 Tauri 2、Rust 和 React 构建，将本地视频素材、演示文档、字幕、翻译和语音合成为一体化的离线工作流。
 

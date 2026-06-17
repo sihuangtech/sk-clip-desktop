@@ -1,6 +1,6 @@
 # SK Clip
 
-[简体中文](README.zh.md)
+[简体中文](README.zh.md) | [日本語](README.ja.md)
 
 SK Clip is a cross-platform desktop application for document-driven video creation. Built with Tauri 2, Rust, and React, it combines local video assets, presentation documents, subtitles, translation, and speech synthesis into a single offline workflow.
 
