@@ -140,3 +140,12 @@ This is a prototype. Several features are partially implemented or mocked:
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
+
+## Contact
+
+- Email: developer@skstudio.cn
+- GitHub: [sihuangtech/sk-clip-desktop](https://github.com/sihuangtech/sk-clip-desktop)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=sihuangtech/sk-clip-desktop&type=Date)](https://star-history.com/#sihuangtech/sk-clip-desktop&Date)
