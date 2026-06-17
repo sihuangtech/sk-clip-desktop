@@ -78,9 +78,27 @@ npm run tauri build -- --target <target-triplet>
 
 通常，要构建其他平台的应用，需要先使用 `rustup target add <target-triplet>` 安装相应的 Rust target toolchain。
 
+### 指定格式打包
+
+如果需要指定打包格式，可以使用 `bundle` 命令：
+
+```bash
+# macOS: 打包为 .app 和 .dmg
+npm run tauri bundle -- --bundles app,dmg
+
+# Windows: 打包为 .msi 和 .exe (NSIS)
+npm run tauri bundle -- --bundles msi,nsis
+
+# Linux: 打包为 .deb
+npm run tauri bundle -- --bundles deb
+
+# Linux: 打包为 .AppImage
+npm run tauri bundle -- --bundles appimage
+```
+
 构建完成后的输出文件通常位于 `src-tauri/target/release/bundle/` 目录下。
 
-## 调试技巧
+### 调试技巧
 
 - **前端调试**：在开发模式下，您可以按 `F12`（或 `Cmd + Option + I` on macOS）打开开发者工具，像调试网页一样调试您的 React 前端代码。
 
