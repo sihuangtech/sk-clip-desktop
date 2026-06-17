@@ -64,11 +64,11 @@ cargo tauri build --target <target-triplete>
 
 下表概览了在不同主机操作系统下可以构建的主要目标平台（需要安装相应的 Rust target toolchain）：
 
-| 主机操作系统 | 可构建目标平台                                                                     | 备注                                                                                                   |
-| ------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Windows      | Windows (x86_64), Linux (x86_64-unknown-linux-gnu), macOS (x86_64-apple-darwin)*   | 构建 Linux/macOS 需要安装相应的 Rust target toolchain 和可能的额外工具。                                |
-| macOS        | macOS (x86_64, aarch64), Windows (x86_64-pc-windows-gnu, x86_64-pc-windows-msvc), Linux (x86_64-unknown-linux-gnu) | 构建 Windows 需要安装相应的 Rust target toolchain (gnu 或 msvc)。构建 Linux 可能需要额外的工具和配置。 |
-| Linux        | Linux (x86_64-unknown-linux-gnu, 等), Windows (x86_64-pc-windows-gnu, x86_64-pc-windows-msvc)*, macOS (x86_64-apple-darwin)* | 构建 Windows/macOS 需要安装相应的 Rust target toolchain 和可能的额外工具。主要取决于发行版和 glibc 版本。 |
+| 主机操作系统 | 可构建目标平台 | 备注 |
+| ------------ | -------------- | ---- |
+| Windows | Windows (x86_64), Linux (x86_64-unknown-linux-gnu), macOS (x86_64-apple-darwin)* | 构建 Linux/macOS 需要安装相应的 Rust target toolchain 和可能的额外工具。 |
+| macOS | macOS (x86_64, aarch64), Windows (x86_64-pc-windows-gnu, x86_64-pc-windows-msvc), Linux (x86_64-unknown-linux-gnu) | 构建 Windows 需要安装相应的 Rust target toolchain (gnu 或 msvc)。构建 Linux 可能需要额外的工具和配置。 |
+| Linux | Linux (x86_64-unknown-linux-gnu, 等), Windows (x86_64-pc-windows-gnu, x86_64-pc-windows-msvc)*, macOS (x86_64-apple-darwin)* | 构建 Windows/macOS 需要安装相应的 Rust target toolchain 和可能的额外工具。主要取决于发行版和 glibc 版本。 |
 
 通常，要构建其他平台的应用，需要先使用 `rustup target add <target-triplete>` 安装相应的 Rust target toolchain。
 
