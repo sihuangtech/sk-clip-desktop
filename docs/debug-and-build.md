@@ -13,6 +13,7 @@ cargo tauri dev
 ```
 
 这将：
+
 1. 构建后端 Rust 代码。
 2. 启动前端 Trunk 开发服务器。
 3. 启动 Tauri 应用窗口，加载前端界面。
@@ -35,22 +36,26 @@ cargo tauri build --target <target-triplete>
 
 例如，构建桌面平台：
 
-*   **Windows (64位)**：
+* **Windows (64位)**：
+
     ```bash
     cargo tauri build --target x86_64-pc-windows-msvc
     ```
 
-*   **macOS (Intel)**：
+* **macOS (Intel)**：
+
     ```bash
     cargo tauri build --target x86_64-apple-darwin
     ```
 
-*   **macOS (Apple Silicon)**：
+* **macOS (Apple Silicon)**：
+
     ```bash
     cargo tauri build --target aarch64-apple-darwin
     ```
 
-*   **Linux (64位)**：
+* **Linux (64位)**：
+
     ```bash
     cargo tauri build --target x86_64-unknown-linux-gnu
     ```
@@ -60,8 +65,8 @@ cargo tauri build --target <target-triplete>
 下表概览了在不同主机操作系统下可以构建的主要目标平台（需要安装相应的 Rust target toolchain）：
 
 | 主机操作系统 | 可构建目标平台                                                                     | 备注                                                                                                   |
-|--------------|------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
-| Windows      | Windows (x86_64), Linux (x86_64-unknown-linux-gnu), macOS (x86_64-apple-darwin)* | 构建 Linux/macOS 需要安装相应的 Rust target toolchain 和可能的额外工具。                                  |
+| ------------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Windows      | Windows (x86_64), Linux (x86_64-unknown-linux-gnu), macOS (x86_64-apple-darwin)*   | 构建 Linux/macOS 需要安装相应的 Rust target toolchain 和可能的额外工具。                                |
 | macOS        | macOS (x86_64, aarch64), Windows (x86_64-pc-windows-gnu, x86_64-pc-windows-msvc), Linux (x86_64-unknown-linux-gnu) | 构建 Windows 需要安装相应的 Rust target toolchain (gnu 或 msvc)。构建 Linux 可能需要额外的工具和配置。 |
 | Linux        | Linux (x86_64-unknown-linux-gnu, 等), Windows (x86_64-pc-windows-gnu, x86_64-pc-windows-msvc)*, macOS (x86_64-apple-darwin)* | 构建 Windows/macOS 需要安装相应的 Rust target toolchain 和可能的额外工具。主要取决于发行版和 glibc 版本。 |
 
@@ -75,18 +80,18 @@ cargo tauri build --target <target-triplete>
 
 ## 调试技巧
 
-*   **前端调试**：在开发模式下，您可以按 `F12` (或 `Cmd + Option + I` on macOS) 打开开发者工具，像调试网页一样调试您的 Yew 前端代码。您可以在 Sources 标签页设置断点，查看变量值，使用 Console 标签页打印信息。
+* **前端调试**：在开发模式下，您可以按 `F12` (或 `Cmd + Option + I` on macOS) 打开开发者工具，像调试网页一样调试您的 Yew 前端代码。您可以在 Sources 标签页设置断点，查看变量值，使用 Console 标签页打印信息。
 
-*   **后端调试**：
-    *   使用 `println!` 或 `log::info!` 在 Rust 代码中打印信息，这些信息会在运行 `cargo tauri dev` 的终端中显示。
-    *   配置您的 IDE (如 VS Code + Rust Analyzer 扩展) 进行 Rust 代码的断点调试。您通常需要在 `launch.json` 文件中配置一个针对 Tauri 应用的调试配置。
+* **后端调试**：
+  * 使用 `println!` 或 `log::info!` 在 Rust 代码中打印信息，这些信息会在运行 `cargo tauri dev` 的终端中显示。
+  * 配置您的 IDE (如 VS Code + Rust Analyzer 扩展) 进行 Rust 代码的断点调试。您通常需要在 `launch.json` 文件中配置一个针对 Tauri 应用的调试配置。
 
-*   **Tauri API 调用**：当调用后端命令 (invoke) 或监听事件 (emit/listen) 时，可以在前端和后端都添加日志，追踪调用是否成功以及参数和返回值是否正确。
+* **Tauri API 调用**：当调用后端命令 (invoke) 或监听事件 (emit/listen) 时，可以在前端和后端都添加日志，追踪调用是否成功以及参数和返回值是否正确。
 
 ## 构建注意事项
 
-*   **系统依赖**：确保您的系统安装了所有必需的构建依赖项（请参考 [开发环境配置](development-setup.md) 文档）。
-*   **代码签名**：对于发布版本，强烈建议进行代码签名，以提高用户信任和兼容性。这需要额外的配置和证书。
-*   **优化**：发布版本会进行编译器优化，以提高性能和减小文件大小。调试信息默认会被移除。
+* **系统依赖**：确保您的系统安装了所有必需的构建依赖项（请参考 [开发环境配置](development-setup.md) 文档）。
+* **代码签名**：对于发布版本，强烈建议进行代码签名，以提高用户信任和兼容性。这需要额外的配置和证书。
+* **优化**：发布版本会进行编译器优化，以提高性能和减小文件大小。调试信息默认会被移除。
 
-如果在构建过程中遇到错误，请检查终端输出的详细错误信息，并参考 [环境安装故障排除](../README.md#环境安装故障排除) 文档。 
+如果在构建过程中遇到错误，请检查终端输出的详细错误信息，并参考 [环境安装故障排除](../README.md#环境安装故障排除) 文档。
