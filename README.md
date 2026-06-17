@@ -39,7 +39,7 @@ The project emphasizes local-first processing. Sensitive media and documents sta
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+| ------- | ----------- |
 | Frontend | React 19, TypeScript, Vite 7 |
 | Desktop/Backend | Tauri 2, Rust |
 | Video Processing | FFmpeg (command-line) |
@@ -49,7 +49,7 @@ The project emphasizes local-first processing. Sensitive media and documents sta
 ## TTS Engine Options
 
 | Engine | Role | Footprint | License | Best Fit |
-|--------|------|-----------|---------|----------|
+| ------ | ---- | --------- | ------- | -------- |
 | [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | Ultra-light rule-based | A few MB | GPL-3.0 | Fallback, debugging |
 | [Piper](https://github.com/rhasspy/piper) | Lightweight neural | Voice packages | MIT/GPL | Default offline narration |
 | [KittenTTS](https://github.com/KittenML/KittenTTS) | Lightweight neural | 25-80 MB | Apache-2.0 | Natural local narration |

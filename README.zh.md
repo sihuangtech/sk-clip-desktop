@@ -39,7 +39,7 @@
 ## 技术栈
 
 | 层级 | 技术 |
-|------|------|
+| ---- | ---- |
 | 前端 | React 19、TypeScript、Vite 7 |
 | 桌面/后端 | Tauri 2、Rust |
 | 视频处理 | FFmpeg（命令行调用） |
@@ -49,7 +49,7 @@
 ## TTS 引擎选项
 
 | 引擎 | 定位 | 体积 | 许可证 | 适用场景 |
-|------|------|------|--------|----------|
+| ---- | ---- | ---- | ------ | -------- |
 | [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | 超轻量规则引擎 | 几 MB | GPL-3.0 | 备用朗读、调试 |
 | [Piper](https://github.com/rhasspy/piper) | 轻量神经网络 | 按语音包下载 | MIT/GPL | 默认离线朗读 |
 | [KittenTTS](https://github.com/KittenML/KittenTTS) | 轻量神经网络 | 25-80 MB | Apache-2.0 | 自然本地朗读 |
