@@ -35,6 +35,41 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "resources": [],
+    "category": "Video",
+    "shortDescription": "文档驱动的视频创作与翻译工具",
+    "longDescription": "彩旗剪辑是一款跨平台桌面视频创作应用，支持文档导入、视频编辑、翻译和语音合成功能。",
+    "copyright": "© 2025 SK Studio",
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.0-dev", "libgtk-3-dev"],
+        "section": "video"
+      },
+      "appimage": {
+        "bundleMediaFramework": true
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15",
+      "dmg": {
+        "appPosition": { "x": 180, "y": 170 },
+        "applicationFolderPosition": { "x": 480, "y": 170 },
+        "windowSize": { "width": 660, "height": 400 }
+      },
+      "signingIdentity": null,
+      "entitlements": null
+    },
+    "windows": {
+      "webviewInstallMode": {
+        "type": "embedBootstrapper",
+        "silent": true
+      },
+      "nsis": {
+        "displayLanguageSelector": true,
+        "installerIcon": "icons/icon.ico",
+        "languages": ["English", "SimpChinese"]
+      }
+    }
   }
 }
