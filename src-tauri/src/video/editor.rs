@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 use crate::models::AppError;
 use log::info;
+use super::processor::VideoProcessor;
 
 /// 视频编辑操作
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -70,51 +71,30 @@ impl VideoEditor {
                 .map_err(|e| AppError::FileError(format!("创建输出目录失败: {}", e)))?;
         }
 
-        // 处理每个操作
-        for (i, operation) in operations.iter().enumerate() {
-            info!("执行操作 {}/{}: {:?}", i + 1, operations.len(), operation);
-            self.apply_single_operation(operation).await?;
+        if operations.len() != 1 {
+            return Err(AppError::VideoProcessingError(
+                "真实多步骤视频编辑滤镜链尚未实现，请先使用单个编辑操作。".to_string(),
+            ));
         }
 
-        // TODO: 实现实际的视频编辑
-        // 模拟处理时间
-        tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-
-        // 模拟创建编辑后的视频文件
-        std::fs::write(output_path, b"mock edited video data")
-            .map_err(|e| AppError::FileError(format!("创建编辑视频失败: {}", e)))?;
-
-        info!("视频编辑完成");
-        Ok(())
-    }
-
-    /// 应用单个编辑操作
-    async fn apply_single_operation(&self, operation: &EditOperation) -> Result<(), AppError> {
-        match operation {
+        let processor = VideoProcessor::new();
+        match &operations[0] {
             EditOperation::Trim { start_time, end_time } => {
-                info!("裁剪视频: {}s - {}s", start_time, end_time);
-                // TODO: 实现视频裁剪
+                processor.trim_video(input_path, output_path, *start_time, *end_time).await?;
             }
             EditOperation::Resize { width, height } => {
-                info!("调整视频大小: {}x{}", width, height);
-                // TODO: 实现视频大小调整
+                processor.resize_video(input_path, output_path, *width, *height).await?;
             }
-            EditOperation::AdjustVolume { volume } => {
-                info!("调整音量: {}", volume);
-                // TODO: 实现音量调整
-            }
-            EditOperation::AddWatermark { watermark_path, position } => {
-                info!("添加水印: {} 位置: {:?}", watermark_path.display(), position);
-                // TODO: 实现水印添加
-            }
-            EditOperation::ChangeSpeed { speed } => {
-                info!("调整播放速度: {}x", speed);
-                // TODO: 实现速度调整
+            EditOperation::AdjustVolume { .. }
+            | EditOperation::AddWatermark { .. }
+            | EditOperation::ChangeSpeed { .. } => {
+                return Err(AppError::VideoProcessingError(
+                    "该编辑操作尚未接入真实 FFmpeg 实现，不能生成模拟视频。".to_string(),
+                ));
             }
         }
-        
-        // 模拟操作时间
-        tokio::time::sleep(std::time::Duration::from_millis(500)).await;
+
+        info!("视频编辑完成");
         Ok(())
     }
 
@@ -126,15 +106,9 @@ impl VideoEditor {
     ) -> Result<PathBuf, AppError> {
         info!("预览编辑效果: {}", input_path.display());
         
-        // TODO: 生成预览文件
-        let preview_path = input_path.with_extension("preview.mp4");
-        
-        // 模拟预览生成
-        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-        std::fs::write(&preview_path, b"mock preview data")
-            .map_err(|e| AppError::FileError(format!("创建预览文件失败: {}", e)))?;
-        
-        Ok(preview_path)
+        Err(AppError::VideoProcessingError(
+            "真实视频预览生成尚未实现，不能创建模拟预览文件。".to_string(),
+        ))
     }
 }
 

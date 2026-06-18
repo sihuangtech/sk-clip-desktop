@@ -4,7 +4,9 @@
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::net::{SocketAddr, TcpStream};
 use std::path::PathBuf;
+use std::time::Duration;
 use log::{info, warn, debug};
 use crate::models::AppError;
 
@@ -211,12 +213,29 @@ impl ProxyManager {
     pub async fn test_proxy(&self, proxy_info: &ProxyInfo) -> Result<bool, AppError> {
         info!("测试代理连接: {}:{}", proxy_info.host, proxy_info.port);
         
-        // TODO: 实现实际的代理测试逻辑
-        // 这里只是模拟测试过程
-        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-        
-        // 模拟测试结果
-        let success = !proxy_info.host.is_empty() && proxy_info.port > 0;
+        let proxy = reqwest::Proxy::all(proxy_info.to_url())
+            .map_err(|e| AppError::ConfigError(format!("代理配置无效: {}", e)))?;
+        let client = reqwest::Client::builder()
+            .proxy(proxy)
+            .timeout(Duration::from_secs(self.config.download_settings.proxy_timeout_seconds))
+            .build()
+            .map_err(|e| AppError::ConfigError(format!("创建代理测试客户端失败: {}", e)))?;
+
+        let mut success = false;
+        for test_url in &self.config.download_settings.test_urls {
+            match client.head(test_url).send().await {
+                Ok(response) if response.status().is_success() => {
+                    success = true;
+                    break;
+                }
+                Ok(response) => {
+                    warn!("代理测试URL返回非成功状态 {}: {}", response.status(), test_url);
+                }
+                Err(err) => {
+                    warn!("代理测试URL失败 {}: {}", test_url, err);
+                }
+            }
+        }
         
         if success {
             info!("代理连接测试成功");
@@ -234,9 +253,6 @@ impl ProxyManager {
         }
         
         info!("自动检测系统代理设置");
-        
-        // TODO: 实现实际的系统代理检测逻辑
-        // 这里只是模拟检测过程
         
         // 检查常见的代理端口
         let common_proxies = vec![
@@ -266,9 +282,12 @@ impl ProxyManager {
     
     /// 检查端口是否开放（简化版本）
     fn is_port_open(&self, _host: &str, _port: u16) -> bool {
-        // TODO: 实现实际的端口检测逻辑
-        // 这里只是模拟
-        false
+        let address = format!("{}:{}", _host, _port);
+        let Ok(socket_addr) = address.parse::<SocketAddr>() else {
+            return false;
+        };
+
+        TcpStream::connect_timeout(&socket_addr, Duration::from_millis(300)).is_ok()
     }
     
     /// 获取镜像URL

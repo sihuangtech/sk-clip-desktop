@@ -1,6 +1,7 @@
 use std::path::PathBuf;
+use std::process::Command;
 use crate::models::AppError;
-use log::info;
+use log::{error, info};
 
 /// 视频转换选项
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -69,22 +70,17 @@ impl VideoConverter {
         // 验证转换选项
         self.validate_options(&options)?;
 
-        // TODO: 实现FFmpeg视频转换
-        // 构建FFmpeg命令
-        let _command = self.build_ffmpeg_command(input_path, output_path, &options);
-        
-        // 模拟转换时间
-        let file_size = std::fs::metadata(input_path)
-            .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?
-            .len();
-        let estimated_time = (file_size / 1_000_000).max(2); // 基于文件大小估算时间
-        
-        info!("预计转换时间: {} 秒", estimated_time);
-        tokio::time::sleep(std::time::Duration::from_secs(estimated_time)).await;
+        let command = self.build_ffmpeg_command(input_path, output_path, &options);
+        let output = Command::new(&command[0])
+            .args(&command[1..])
+            .output()
+            .map_err(|e| AppError::VideoProcessingError(format!("FFmpeg执行失败: {}", e)))?;
 
-        // 模拟创建转换后的文件
-        std::fs::write(output_path, b"mock converted video data")
-            .map_err(|e| AppError::FileError(format!("创建转换文件失败: {}", e)))?;
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            error!("FFmpeg转换失败: {}", stderr);
+            return Err(AppError::VideoProcessingError(format!("视频转换失败: {}", stderr)));
+        }
 
         info!("视频转换完成");
         Ok(())
@@ -178,6 +174,8 @@ impl VideoConverter {
             "ultra" => command.extend_from_slice(&["-crf".to_string(), "15".to_string()]),
             _ => {}
         }
+
+        command.push("-y".to_string());
 
         // 添加输出文件
         command.push(output_path.to_string_lossy().to_string());

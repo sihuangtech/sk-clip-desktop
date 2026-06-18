@@ -45,19 +45,10 @@ impl WhisperModel {
     }
 
     async fn download_model(&self) -> Result<(), AppError> {
-        // 这里应该下载真实的Whisper模型
-        // 为了演示，我们创建一个占位符文件
-        info!("下载Whisper模型到: {}", self.model_path.display());
-        
-        // 模拟下载过程
-        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-        
-        std::fs::write(&self.model_path, b"WHISPER_MODEL_PLACEHOLDER").map_err(|e| {
-            AppError::FileError(format!("保存模型文件失败: {}", e))
-        })?;
-        
-        info!("Whisper模型下载完成");
-        Ok(())
+        Err(AppError::ModelInitializationError(format!(
+            "Whisper 模型不存在，且当前 WhisperModel 未接入真实下载器: {}",
+            self.model_path.display()
+        )))
     }
 
     pub fn is_initialized(&self) -> bool {

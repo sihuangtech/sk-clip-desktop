@@ -6,7 +6,7 @@ use log::{info, error};
 use std::path::PathBuf;
 use std::fs;
 
-use crate::models::{AppError, TimelineProject, TimelineTrack, TrackType, MediaAsset, MediaType};
+use crate::models::{AppError, TimelineProject, TrackType};
 use crate::file_manager;
 
 // 创建时间线项目命令

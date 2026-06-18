@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import { open } from '@tauri-apps/plugin-dialog';
 import { useAppContext } from '../../context/AppContext';
 import { tauriApi } from '../../api/tauri';
 import { LoadingSpinner } from '../common/LoadingSpinner';
@@ -8,18 +9,26 @@ export function DocumentImport() {
   const { setAppState } = useAppContext();
   const [isImporting, setIsImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileSelect = async () => {
+    const selected = await open({
+      multiple: false,
+      filters: [
+        {
+          name: 'Document',
+          extensions: ['pptx', 'ppt', 'md', 'markdown', 'pdf', 'docx', 'doc'],
+        },
+      ],
+    });
+
+    if (typeof selected !== 'string') return;
 
     setIsImporting(true);
     setError(null);
     setAppState({ status: 'documentImporting' });
 
     try {
-      const content = await tauriApi.importDocument(file.name);
+      const content = await tauriApi.importDocument(selected);
       setAppState({ status: 'documentReady', content });
     } catch (err) {
       const message = err instanceof Error ? err.message : '导入失败';
@@ -33,19 +42,11 @@ export function DocumentImport() {
   return (
     <div className="document-import">
       <div className="upload-area">
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".pptx,.ppt,.md,.markdown,.pdf"
-          onChange={handleFileSelect}
-          className="file-input"
-          id="document-input"
-        />
-        <label htmlFor="document-input" className="upload-label">
+        <button type="button" className="upload-label" onClick={handleFileSelect}>
           <div className="upload-icon">📄</div>
           <p>点击选择文档文件</p>
           <p className="upload-hint">支持 PPTX、Markdown、PDF 格式</p>
-        </label>
+        </button>
       </div>
 
       {isImporting && <LoadingSpinner message="正在导入文档..." />}

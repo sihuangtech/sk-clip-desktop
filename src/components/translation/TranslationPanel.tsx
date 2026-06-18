@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { save } from '@tauri-apps/plugin-dialog';
 import { useAppContext } from '../../context/AppContext';
 import { SUPPORTED_LANGUAGES, VOICE_OPTIONS, type VoiceType, type TranslationTab } from '../../types';
 import { tauriApi } from '../../api/tauri';
@@ -11,17 +12,19 @@ export function TranslationPanel() {
   const [translatedText, setTranslatedText] = useState('');
   const [isTranslating, setIsTranslating] = useState(false);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [voiceType, setVoiceType] = useState<VoiceType>('female');
   const [speechSpeed, setSpeechSpeed] = useState(1.0);
 
   const handleTranslate = async () => {
     if (!sourceText.trim()) return;
     setIsTranslating(true);
+    setError(null);
     try {
       const result = await tauriApi.translateText(sourceText, sourceLanguage, targetLanguage);
-      setTranslatedText(result);
+      setTranslatedText(result.translated_text);
     } catch (err) {
-      console.error('翻译失败:', err);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setIsTranslating(false);
     }
@@ -29,11 +32,21 @@ export function TranslationPanel() {
 
   const handleSynthesize = async () => {
     if (!translatedText.trim()) return;
+    const outputPath = await save({
+      defaultPath: 'speech.wav',
+      filters: [{ name: 'Audio', extensions: ['wav'] }],
+    });
+    if (!outputPath) return;
+
     setIsSynthesizing(true);
+    setError(null);
     try {
-      await tauriApi.synthesizeSpeech(translatedText, voiceType, speechSpeed);
+      await tauriApi.synthesizeSpeech(translatedText, outputPath, {
+        voiceType,
+        speed: speechSpeed,
+      });
     } catch (err) {
-      console.error('合成失败:', err);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setIsSynthesizing(false);
     }
@@ -58,6 +71,8 @@ export function TranslationPanel() {
 
       {activeTab === 'translate' && (
         <div className="translate-tab">
+          {error && <div className="error-message"><span>{error}</span></div>}
+
           <div className="language-selectors">
             <select value={sourceLanguage} onChange={(e) => setSourceLanguage(e.target.value)}>
               {SUPPORTED_LANGUAGES.map((lang) => (
@@ -104,6 +119,8 @@ export function TranslationPanel() {
 
       {activeTab === 'synthesis' && (
         <div className="synthesis-tab">
+          {error && <div className="error-message"><span>{error}</span></div>}
+
           <div className="voice-options">
             <label>音色选择</label>
             <div className="voice-grid">

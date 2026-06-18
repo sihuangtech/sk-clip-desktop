@@ -1,4 +1,5 @@
 import { useAppContext } from '../../context/AppContext';
+import { convertFileSrc } from '@tauri-apps/api/core';
 
 export function PreviewArea() {
   const { appState } = useAppContext();
@@ -23,7 +24,7 @@ export function PreviewArea() {
         <div className="video-preview">
           <div className="video-container">
             <video
-              src={appState.videoPath}
+              src={convertFileSrc(appState.videoPath)}
               controls
               className="preview-video"
             />
@@ -47,15 +48,15 @@ export function PreviewArea() {
 
       {appState.status === 'documentReady' && (
         <div className="document-preview">
-          <h3>{appState.content.title}</h3>
+          <h3>{appState.content.title ?? '未命名文档'}</h3>
           <div className="document-info">
-            <span>类型: {appState.content.documentType}</span>
-            <span>页数: {appState.content.totalPages}</span>
+            <span>类型: {appState.content.document_type}</span>
+            <span>页数: {appState.content.metadata.page_count}</span>
           </div>
           {appState.content.pages.slice(0, 3).map((page) => (
-            <div key={page.pageNumber} className="document-page-preview">
-              <h4>第 {page.pageNumber} 页 {page.title && `- ${page.title}`}</h4>
-              <p>{page.textContent.substring(0, 200)}...</p>
+            <div key={page.page_number} className="document-page-preview">
+              <h4>第 {page.page_number} 页</h4>
+              <p>{page.text.substring(0, 200)}...</p>
             </div>
           ))}
         </div>

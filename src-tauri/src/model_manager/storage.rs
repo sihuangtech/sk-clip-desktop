@@ -76,12 +76,10 @@ impl ModelStorageManager {
             return Ok(0);
         }
         
-        // TODO: 实现实际的清理逻辑
-        // 这里只是模拟
-        let cleaned_bytes = current_usage - max_storage_bytes;
-        info!("模拟清理了 {} 字节的模型文件", cleaned_bytes);
-        
-        Ok(cleaned_bytes)
+        Err(AppError::FileError(format!(
+            "模型存储已超出限制，但真实清理策略尚未实现。当前使用 {} 字节，限制 {} 字节。",
+            current_usage, max_storage_bytes
+        )))
     }
     
     /// 计算总存储使用量

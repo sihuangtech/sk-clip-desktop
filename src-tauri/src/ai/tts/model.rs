@@ -42,23 +42,10 @@ impl TtsModel {
     }
 
     async fn download_models(&self) -> Result<(), AppError> {
-        info!("下载TTS模型...");
-        
-        let languages = vec!["zh", "en", "ja", "ko"];
-        
-        for lang in languages {
-            let model_file = self.models_dir.join(format!("tts-{}.bin", lang));
-            if !model_file.exists() {
-                info!("下载TTS模型: {}", lang);
-                tokio::time::sleep(std::time::Duration::from_millis(800)).await;
-                std::fs::write(&model_file, b"TTS_MODEL_PLACEHOLDER").map_err(|e| {
-                    AppError::FileError(format!("保存TTS模型失败: {}", e))
-                })?;
-            }
-        }
-        
-        info!("TTS模型下载完成");
-        Ok(())
+        info!("检查TTS模型目录: {}", self.models_dir.display());
+        Err(AppError::ModelInitializationError(
+            "真实 TTS 模型下载/加载尚未接入，不能创建占位模型文件。".to_string(),
+        ))
     }
 
     pub fn is_initialized(&self) -> bool {

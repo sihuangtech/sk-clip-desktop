@@ -3,8 +3,6 @@
 // AI相关命令模块，处理语音识别、文本翻译、语音合成等AI功能
 
 use log::info;
-use std::path::PathBuf;
-
 use crate::ai::{SpeechRecognitionResult, SpeechSynthesisResult, TranslationResult};
 use crate::config::ConfigManager;
 use crate::models::AppError;
@@ -14,10 +12,9 @@ use crate::models::AppError;
 pub async fn initialize_ai_models() -> Result<String, AppError> {
     info!("调用 initialize_ai_models 命令");
 
-    // TODO: 使用新的AI模块初始化模型
-    tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-
-    Ok("AI模型初始化完成".to_string())
+    Err(AppError::ModelInitializationError(
+        "真实 AI 模型后端尚未配置，无法初始化。请先接入真实 Whisper/翻译/TTS 引擎。".to_string(),
+    ))
 }
 
 // 获取AI模型状态命令
@@ -45,15 +42,10 @@ pub async fn recognize_speech(
 ) -> Result<SpeechRecognitionResult, AppError> {
     info!("调用 recognize_speech 命令，音频路径: {}", audio_path);
 
-    // TODO: 使用新的AI模块进行语音识别
-    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-
-    Ok(SpeechRecognitionResult {
-        text: "这是模拟的语音识别结果".to_string(),
-        confidence: 0.95,
-        language: language.unwrap_or("zh".to_string()),
-        timestamps: vec![(0.0, 5.0, "这是模拟的语音识别结果".to_string())],
-    })
+    let _ = language;
+    Err(AppError::ModelNotInitialized(
+        "真实语音识别后端尚未配置，不能返回模拟识别结果。".to_string(),
+    ))
 }
 
 // 文本翻译命令
@@ -65,16 +57,10 @@ pub async fn translate_text(
 ) -> Result<TranslationResult, AppError> {
     info!("调用 translate_text 命令，文本: {}", text);
 
-    // TODO: 使用新的AI模块进行文本翻译
-    tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-
-    Ok(TranslationResult {
-        source_text: text,
-        translated_text: "这是模拟的翻译结果".to_string(),
-        source_language,
-        target_language,
-        confidence: 0.92,
-    })
+    let _ = (source_language, target_language);
+    Err(AppError::ModelNotInitialized(
+        "真实文本翻译后端尚未配置，不能返回模拟翻译结果。".to_string(),
+    ))
 }
 
 // 语音合成命令
@@ -90,18 +76,9 @@ pub async fn synthesize_speech(
     let selected_engine = config_manager.get_config().ai.selected_tts_engine.clone();
     info!("当前TTS引擎: {}", selected_engine);
 
-    // TODO: 使用新的AI模块进行语音合成
-    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-
-    // 模拟创建音频文件
-    std::fs::write(&output_path, b"mock audio data")
-        .map_err(|e| AppError::FileError(format!("创建音频文件失败: {}", e)))?;
-
-    Ok(SpeechSynthesisResult {
-        text,
-        voice: format!("{}:default", selected_engine),
-        output_path: PathBuf::from(output_path),
-        duration: 5.0,
-        sample_rate: 22050,
-    })
+    let _ = output_path;
+    Err(AppError::ModelNotInitialized(format!(
+        "真实语音合成后端尚未配置，当前选择的 TTS 引擎 `{}` 还不能生成音频。",
+        selected_engine
+    )))
 }

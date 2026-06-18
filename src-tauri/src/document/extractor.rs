@@ -60,38 +60,9 @@ impl ContentExtractor {
             return Err(AppError::FileError(format!("文档文件不存在: {}", document_path.display())));
         }
 
-        // TODO: 实现真实的内容提取
-        // 模拟提取时间
-        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-
-        // 生成模拟提取内容
-        let text = "这是从文档中提取的模拟文本内容。包含了文档的主要文字信息。".to_string();
-        let images = vec![];
-        let tables = vec![
-            TableData {
-                id: "table_1".to_string(),
-                title: Some("示例表格".to_string()),
-                rows: vec![
-                    vec!["列1".to_string(), "列2".to_string()],
-                    vec!["数据1".to_string(), "数据2".to_string()],
-                ],
-            },
-        ];
-
-        let metadata = ExtractionMetadata {
-            source_file: document_path.clone(),
-            extracted_at: chrono::Utc::now().to_rfc3339(),
-            text_length: text.len(),
-            image_count: images.len(),
-            table_count: tables.len(),
-        };
-
-        Ok(ExtractedContent {
-            text,
-            images,
-            tables,
-            metadata,
-        })
+        Err(AppError::DocumentParsingError(
+            "真实通用文档内容提取尚未实现，不能返回模拟提取内容。".to_string(),
+        ))
     }
 
     /// 提取纯文本
@@ -110,12 +81,9 @@ impl ContentExtractor {
         std::fs::create_dir_all(output_dir)
             .map_err(|e| AppError::FileError(format!("创建输出目录失败: {}", e)))?;
 
-        // TODO: 实现真实的图片提取
-        // 模拟提取时间
-        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-
-        // 返回空列表（模拟没有图片）
-        Ok(vec![])
+        Err(AppError::DocumentParsingError(
+            "真实文档图片提取尚未实现，不能返回模拟图片列表。".to_string(),
+        ))
     }
 }
 

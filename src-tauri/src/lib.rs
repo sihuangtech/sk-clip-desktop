@@ -36,8 +36,8 @@ pub fn run() {
         .manage(AppState::default())
         .invoke_handler(tauri::generate_handler![
             commands::basic::greet,
-            commands::basic::get_app_config,
-            commands::basic::update_app_config,
+            commands::config::get_app_config,
+            commands::config::update_app_config,
             commands::video::upload_video,
             commands::video::get_video_info,
             commands::video::extract_audio_from_video,
@@ -46,9 +46,9 @@ pub fn run() {
             commands::video::add_subtitles_command,
             commands::video::resize_video_command,
             commands::video::create_video_thumbnail,
-            commands::ai::translate_video,
-            commands::ai::get_translation_task,
-            commands::ai::check_task_output,
+            commands::video::translate_video,
+            commands::video::get_translation_task,
+            commands::video::check_task_output,
             commands::ai::recognize_speech,
             commands::ai::translate_text,
             commands::ai::synthesize_speech,

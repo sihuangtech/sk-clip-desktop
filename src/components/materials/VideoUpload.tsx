@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import { open } from '@tauri-apps/plugin-dialog';
 import { useAppContext } from '../../context/AppContext';
 import { SUPPORTED_LANGUAGES } from '../../types';
 import { tauriApi } from '../../api/tauri';
@@ -8,20 +9,26 @@ import { ErrorMessage } from '../common/ErrorMessage';
 export function VideoUpload() {
   const { appState, setAppState, sourceLanguage, setSourceLanguage, targetLanguage, setTargetLanguage } = useAppContext();
   const [error, setError] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileSelect = async () => {
+    const selected = await open({
+      multiple: false,
+      filters: [
+        {
+          name: 'Video',
+          extensions: ['mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm'],
+        },
+      ],
+    });
+
+    if (typeof selected !== 'string') return;
 
     setError(null);
     setAppState({ status: 'uploading' });
 
     try {
-      // 获取文件路径
-      const filePath = file.name;
-      await tauriApi.uploadVideo(filePath);
-      setAppState({ status: 'ready', videoPath: URL.createObjectURL(file) });
+      const importedPath = await tauriApi.uploadVideo(selected);
+      setAppState({ status: 'ready', videoPath: importedPath });
     } catch (err) {
       const message = err instanceof Error ? err.message : '上传失败';
       setError(message);
@@ -49,28 +56,17 @@ export function VideoUpload() {
   const handleReset = () => {
     setAppState({ status: 'idle' });
     setError(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
   };
 
   return (
     <div className="video-upload">
       {appState.status === 'idle' && (
         <div className="upload-area">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="video/*"
-            onChange={handleFileSelect}
-            className="file-input"
-            id="video-input"
-          />
-          <label htmlFor="video-input" className="upload-label">
+          <button type="button" className="upload-label" onClick={handleFileSelect}>
             <div className="upload-icon">🎬</div>
             <p>点击选择视频文件</p>
             <p className="upload-hint">支持 MP4、AVI、MOV 等格式</p>
-          </label>
+          </button>
         </div>
       )}
 

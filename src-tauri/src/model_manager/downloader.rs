@@ -76,24 +76,43 @@ impl ModelDownloader {
                 .map_err(|e| AppError::FileError(format!("创建目录失败: {}", e)))?;
         }
         
-        // TODO: 实现实际的HTTP下载逻辑，支持代理
-        // 这里只是模拟下载过程
-        let proxy_info = self.proxy_manager.get_current_proxy();
-        
-        if let Some(proxy) = &proxy_info {
-            info!("通过代理下载: {}", proxy.to_url());
-            // 模拟代理下载延迟
-            tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-        } else {
-            info!("直接下载");
-            // 模拟直接下载延迟
-            tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+        let mut client_builder = reqwest::Client::builder();
+
+        if let Some(proxy) = self.proxy_manager.get_current_proxy() {
+            if !self.proxy_manager.should_bypass_proxy(url) {
+                info!("通过代理下载: {}", proxy.to_url());
+                let reqwest_proxy = reqwest::Proxy::all(proxy.to_url())
+                    .map_err(|e| AppError::ConfigError(format!("代理配置无效: {}", e)))?;
+                client_builder = client_builder.proxy(reqwest_proxy);
+            }
         }
-        
-        // 模拟创建模型文件
-        std::fs::write(output_path, b"mock model data with proxy support")
-            .map_err(|e| AppError::FileError(format!("创建模型文件失败: {}", e)))?;
-        
+
+        let client = client_builder
+            .build()
+            .map_err(|e| AppError::ConfigError(format!("创建HTTP客户端失败: {}", e)))?;
+
+        let response = client
+            .get(url)
+            .send()
+            .await
+            .map_err(|e| AppError::CommandError(format!("下载请求失败: {}", e)))?;
+
+        if !response.status().is_success() {
+            return Err(AppError::CommandError(format!(
+                "下载失败，HTTP 状态码: {}",
+                response.status()
+            )));
+        }
+
+        let bytes = response
+            .bytes()
+            .await
+            .map_err(|e| AppError::CommandError(format!("读取下载内容失败: {}", e)))?;
+
+        tokio::fs::write(output_path, bytes)
+            .await
+            .map_err(|e| AppError::FileError(format!("保存下载文件失败: {}", e)))?;
+
         Ok(())
     }
     
@@ -109,10 +128,13 @@ impl ModelDownloader {
             }
         }
         
-        // TODO: 实现直接连接测试
-        // 这里只是模拟测试
-        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-        Ok(true)
+        let response = reqwest::Client::new()
+            .head(url)
+            .send()
+            .await
+            .map_err(|e| AppError::CommandError(format!("连接测试失败: {}", e)))?;
+
+        Ok(response.status().is_success())
     }
     
     /// 获取代理管理器的引用

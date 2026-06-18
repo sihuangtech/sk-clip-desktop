@@ -8,15 +8,15 @@ use std::path::{Path, PathBuf};
 use std::fs;
 use uuid::Uuid;
 
-use crate::models::{AppState, AppError, TaskStatus, TranslationTask, UploadVideoArgs, TranslateVideoArgs};
+use crate::models::{AppState, AppError, TaskStatus, TranslationTask};
 use crate::file_manager;
-use crate::video::{VideoServiceManager, VideoMetadata};
+use crate::video::{VideoMetadata};
 use crate::commands::basic::is_language_supported;
 
 // 上传视频文件命令
 #[tauri::command]
-pub async fn upload_video(_app_handle: AppHandle, args: UploadVideoArgs) -> Result<String, AppError> {
-    info!("调用 upload_video 命令，参数: {}", args.path);
+pub async fn upload_video(_app_handle: AppHandle, path: String) -> Result<String, AppError> {
+    info!("调用 upload_video 命令，参数: {}", path);
     
     let app_data_dir = file_manager::get_app_data_dir()?;
     let videos_dir = app_data_dir.join("videos");
@@ -30,7 +30,7 @@ pub async fn upload_video(_app_handle: AppHandle, args: UploadVideoArgs) -> Resu
     }
     
     let file_id = Uuid::new_v4().to_string();
-    let original_path = Path::new(&args.path);
+    let original_path = Path::new(&path);
     let file_extension = original_path
         .extension()
         .and_then(|ext| ext.to_str())
@@ -50,17 +50,24 @@ pub async fn upload_video(_app_handle: AppHandle, args: UploadVideoArgs) -> Resu
 pub async fn translate_video(
     app_handle: AppHandle, 
     state: State<'_, AppState>,
-    args: TranslateVideoArgs
+    video_path: String,
+    source_language: String,
+    target_language: String,
 ) -> Result<String, AppError> {
-    info!("调用 translate_video 命令，参数: {:?}", args);
+    info!(
+        "调用 translate_video 命令，视频: {}, 语言: {} -> {}",
+        video_path,
+        source_language,
+        target_language
+    );
     
-    if !is_language_supported(&args.source_language) {
-        error!("不受支持的源语言: {}", args.source_language);
-        return Err(AppError::UnsupportedLanguage(args.source_language));
+    if !is_language_supported(&source_language) {
+        error!("不受支持的源语言: {}", source_language);
+        return Err(AppError::UnsupportedLanguage(source_language));
     }
-    if !is_language_supported(&args.target_language) {
-        error!("不受支持的目标语言: {}", args.target_language);
-        return Err(AppError::UnsupportedLanguage(args.target_language));
+    if !is_language_supported(&target_language) {
+        error!("不受支持的目标语言: {}", target_language);
+        return Err(AppError::UnsupportedLanguage(target_language));
     }
     
     let task_id = Uuid::new_v4().to_string();
@@ -82,10 +89,10 @@ pub async fn translate_video(
     
     let task = TranslationTask {
         id: task_id.clone(),
-        video_path: args.video_path.clone(),
+        video_path: video_path.clone(),
         status: TaskStatus::Pending,
-        source_language: args.source_language.clone(),
-        target_language: args.target_language.clone(),
+        source_language: source_language.clone(),
+        target_language: target_language.clone(),
         output_path: Some(output_path_str.clone()),
         error_message: None,
     };
@@ -94,9 +101,9 @@ pub async fn translate_video(
     info!("任务 {} 已添加到状态管理", task_id);
     
     let task_id_clone = task_id.clone();
-    let video_path_clone = args.video_path.clone();
-    let source_language_clone = args.source_language.clone();
-    let target_language_clone = args.target_language.clone();
+    let video_path_clone = video_path.clone();
+    let source_language_clone = source_language.clone();
+    let target_language_clone = target_language.clone();
     let output_path_clone = output_path.clone();
 
     tokio::spawn(async move {
@@ -147,17 +154,10 @@ pub async fn process_video_translation_flow(
 ) -> Result<(), AppError> {
     info!("开始视频翻译流程: {} -> {}", input_path, output_path.display());
     info!("语言: {} -> {}", source_language, target_language);
-    
-    // TODO: 使用新的模块化结构实现翻译流程
-    // 模拟处理时间
-    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-    
-    // 模拟创建输出文件
-    std::fs::write(output_path, b"mock translated video data")
-        .map_err(|e| AppError::FileError(format!("创建输出文件失败: {}", e)))?;
-    
-    info!("视频翻译流程完成");
-    Ok(())
+
+    Err(AppError::AiModelError(
+        "真实视频翻译流水线尚未配置：需要接入真实 ASR、翻译、TTS 和音视频合成引擎后才能执行。".to_string(),
+    ))
 }
 
 // 获取翻译任务状态命令
@@ -216,10 +216,32 @@ pub async fn get_video_info(video_path: String) -> Result<VideoMetadata, AppErro
     info!("调用 get_video_info 命令，视频路径: {}", video_path);
     
     let path = PathBuf::from(video_path);
-    let config = crate::config::AppConfig::default();
-    let video_service = VideoServiceManager::new(config.video);
-    
-    video_service.analyze_video(&path).await
+    let processor = crate::video::processor::VideoProcessor::new();
+    let info = processor.get_video_info(&path).await?;
+    let file_metadata = std::fs::metadata(&path)
+        .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
+
+    Ok(VideoMetadata {
+        file_path: path,
+        file_size: info.size,
+        duration: info.duration,
+        width: info.width,
+        height: info.height,
+        framerate: info.fps as f32,
+        video_codec: info.video_codec,
+        audio_codec: if info.audio_codec.is_empty() { None } else { Some(info.audio_codec) },
+        bitrate: info.bitrate,
+        sample_rate: None,
+        audio_channels: None,
+        format: file_metadata
+            .file_type()
+            .is_file()
+            .then(|| "media".to_string())
+            .unwrap_or_else(|| "unknown".to_string()),
+        created_at: None,
+        has_audio: true,
+        has_video: true,
+    })
 }
 
 // 从视频提取音频命令

@@ -14,23 +14,32 @@ export type AppState =
 export enum DocumentType {
   PowerPoint = 'PowerPoint',
   Markdown = 'Markdown',
-  Pdf = 'Pdf',
+  PDF = 'PDF',
+  Word = 'Word',
+  Unknown = 'Unknown',
 }
 
 export interface DocumentPage {
-  pageNumber: number;
-  title?: string;
-  textContent: string;
-  imagePaths: string[];
-  notes?: string;
+  page_number: number;
+  text: string;
+  images: unknown[];
+  tables: unknown[];
+  layout?: unknown;
 }
 
 export interface DocumentContent {
-  documentType: DocumentType;
-  title: string;
+  document_type: DocumentType;
+  title?: string;
+  author?: string;
   pages: DocumentPage[];
-  totalPages: number;
-  sourcePath: string;
+  metadata: {
+    file_path: string;
+    file_size: number;
+    created_at?: string;
+    modified_at?: string;
+    page_count: number;
+    language?: string;
+  };
 }
 
 // 翻译任务
@@ -42,6 +51,22 @@ export interface TranslationTask {
   targetLanguage: string;
   outputPath?: string;
   errorMessage?: string;
+}
+
+export interface TranslationResult {
+  source_text: string;
+  translated_text: string;
+  source_language: string;
+  target_language: string;
+  confidence: number;
+}
+
+export interface SpeechSynthesisResult {
+  text: string;
+  voice: string;
+  output_path: string;
+  duration: number;
+  sample_rate: number;
 }
 
 // 语言
@@ -68,34 +93,46 @@ export interface TtsEngine {
   category: string;
   footprint: string;
   license: string;
-  recommendedUse: string;
-  repositoryUrl: string;
+  recommended_use: string;
+  repository_url: string;
 }
 
 // 应用配置
 export interface AiConfig {
-  selectedTtsEngine: string;
-  availableTtsEngines: TtsEngine[];
-  defaultSourceLanguage: string;
-  defaultTargetLanguage: string;
-  whisperModelPath: string;
+  whisper_model_path?: string;
+  tts_model_path?: string;
+  selected_tts_engine: string;
+  available_tts_engines: TtsEngine[];
+  translation_model_path?: string;
+  default_language: string;
+  supported_languages: string[];
 }
 
 export interface VideoConfig {
-  defaultOutputFormat: string;
-  defaultQuality: string;
-  maxFileSize: number;
+  default_output_format: string;
+  default_quality: string;
+  max_file_size_mb: number;
+  temp_dir?: string;
 }
 
 export interface DocumentConfig {
-  pdfDpi: number;
-  maxDocumentSize: number;
+  supported_formats: string[];
+  max_file_size_mb: number;
+  pdf_dpi: number;
+}
+
+export interface UiConfig {
+  theme: string;
+  language: string;
+  window_size: [number, number];
+  remember_window_position: boolean;
 }
 
 export interface AppConfig {
   ai: AiConfig;
   video: VideoConfig;
   document: DocumentConfig;
+  ui: UiConfig;
 }
 
 // 音色类型

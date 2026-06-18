@@ -1,5 +1,11 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { AppConfig, DocumentContent } from '../types';
+import type {
+  AppConfig,
+  DocumentContent,
+  SpeechSynthesisResult,
+  TranslationResult,
+  TranslationTask,
+} from '../types';
 
 export const tauriApi = {
   // 基础命令
@@ -19,15 +25,15 @@ export const tauriApi = {
   getVideoInfo: (path: string) =>
     invoke<string>('get_video_info', { path }),
 
-  extractAudioFromVideo: (videoPath: string) =>
-    invoke<string>('extract_audio_from_video', { videoPath }),
+  extractAudioFromVideo: (videoPath: string, outputAudioPath: string) =>
+    invoke<string>('extract_audio_from_video', { videoPath, outputAudioPath }),
 
   // 翻译和 AI
   translateVideo: (videoPath: string, sourceLanguage: string, targetLanguage: string) =>
     invoke<string>('translate_video', { videoPath, sourceLanguage, targetLanguage }),
 
   getTranslationTask: (taskId: string) =>
-    invoke<string>('get_translation_task', { taskId }),
+    invoke<TranslationTask>('get_translation_task', { taskId }),
 
   checkTaskOutput: (taskId: string) =>
     invoke<string>('check_task_output', { taskId }),
@@ -36,16 +42,16 @@ export const tauriApi = {
     invoke<string>('recognize_speech', { audioPath }),
 
   translateText: (text: string, sourceLanguage: string, targetLanguage: string) =>
-    invoke<string>('translate_text', { text, sourceLanguage, targetLanguage }),
+    invoke<TranslationResult>('translate_text', { text, sourceLanguage, targetLanguage }),
 
-  synthesizeSpeech: (text: string, voiceType: string, speed: number) =>
-    invoke<string>('synthesize_speech', { text, voiceType, speed }),
+  synthesizeSpeech: (text: string, outputPath: string, config?: Record<string, unknown>) =>
+    invoke<SpeechSynthesisResult>('synthesize_speech', { text, outputPath, config }),
 
   getAiModelStatus: () =>
     invoke<string>('get_ai_model_status'),
 
   initializeAiModels: () =>
-    invoke<boolean>('initialize_ai_models'),
+    invoke<string>('initialize_ai_models'),
 
   // 文档处理
   importDocument: (filePath: string) =>
@@ -54,24 +60,24 @@ export const tauriApi = {
   getSupportedDocumentTypes: () =>
     invoke<string[]>('get_supported_document_types'),
 
-  convertDocumentToAssets: (documentPath: string) =>
-    invoke<string>('convert_document_to_assets', { documentPath }),
+  convertDocumentToAssets: (documentContent: DocumentContent) =>
+    invoke<string[]>('convert_document_to_assets', { documentContent }),
 
   // 时间线项目
   createTimelineProject: (name: string) =>
-    invoke<string>('create_timeline_project', { name }),
+    invoke<unknown>('create_timeline_project', { projectName: name }),
 
-  saveTimelineProject: (project: string) =>
-    invoke<boolean>('save_timeline_project', { project }),
+  saveTimelineProject: (projectId: string, projectData: unknown) =>
+    invoke<string>('save_timeline_project', { projectId, projectData }),
 
   loadTimelineProject: (projectId: string) =>
-    invoke<string>('load_timeline_project', { projectId }),
+    invoke<unknown>('load_timeline_project', { projectId }),
 
-  exportTimelineVideo: (projectId: string) =>
-    invoke<string>('export_timeline_video', { projectId }),
+  exportTimelineVideo: (projectId: string, outputPath: string, exportSettings: Record<string, unknown>) =>
+    invoke<string>('export_timeline_video', { projectId, outputPath, exportSettings }),
 
   listTimelineProjects: () =>
-    invoke<string[]>('list_timeline_projects'),
+    invoke<unknown[]>('list_timeline_projects'),
 
   deleteTimelineProject: (projectId: string) =>
     invoke<boolean>('delete_timeline_project', { projectId }),
@@ -81,13 +87,19 @@ export const tauriApi = {
     invoke<string>('get_proxy_config'),
 
   applyProxyProfile: (profile: string) =>
-    invoke<boolean>('apply_proxy_profile', { profile }),
+    invoke<string>('apply_proxy_profile', { profileName: profile }),
 
   disableProxy: () =>
-    invoke<boolean>('disable_proxy'),
+    invoke<string>('disable_proxy'),
 
-  testProxyConnection: () =>
-    invoke<boolean>('test_proxy_connection'),
+  testProxyConnection: (
+    proxyType: string,
+    host: string,
+    port: number,
+    username?: string,
+    password?: string,
+  ) =>
+    invoke<boolean>('test_proxy_connection', { proxyType, host, port, username, password }),
 
   autoDetectProxy: () =>
     invoke<string>('auto_detect_proxy'),

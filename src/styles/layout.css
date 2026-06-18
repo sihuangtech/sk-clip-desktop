@@ -416,6 +416,8 @@
 
 .upload-label {
   cursor: pointer;
+  width: 100%;
+  color: inherit;
 }
 
 .upload-icon {

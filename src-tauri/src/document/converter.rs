@@ -60,16 +60,10 @@ impl DocumentConverter {
                 .map_err(|e| AppError::FileError(format!("创建输出目录失败: {}", e)))?;
         }
 
-        // TODO: 实现真实的文档转换
-        // 模拟转换时间
-        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-
-        // 模拟创建转换后的文件
-        std::fs::write(output_path, b"mock converted document data")
-            .map_err(|e| AppError::FileError(format!("创建转换文件失败: {}", e)))?;
-
-        info!("文档转换完成");
-        Ok(())
+        let _ = output_path;
+        Err(AppError::DocumentParsingError(
+            "真实文档转换尚未实现，不能创建模拟转换文件。".to_string(),
+        ))
     }
 }
 

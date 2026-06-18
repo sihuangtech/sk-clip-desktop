@@ -188,103 +188,19 @@ impl DocumentParser {
     /// 解析PDF文档
     async fn parse_pdf(&self, document_path: &PathBuf) -> Result<DocumentContent, AppError> {
         info!("解析PDF文档: {}", document_path.display());
-        
-        // TODO: 集成PDF解析库（如pdf-extract或poppler）
-        // 模拟解析时间
-        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-        
-        let file_metadata = std::fs::metadata(document_path)
-            .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
 
-        // 生成模拟内容
-        let pages = vec![
-            PageContent {
-                page_number: 1,
-                text: "这是PDF文档第一页的模拟内容。".to_string(),
-                images: vec![],
-                tables: vec![],
-                layout: Some(LayoutInfo {
-                    width: 595.0,
-                    height: 842.0,
-                    margins: Margins {
-                        top: 72.0,
-                        right: 72.0,
-                        bottom: 72.0,
-                        left: 72.0,
-                    },
-                }),
-            },
-        ];
-
-        Ok(DocumentContent {
-            document_type: DocumentType::PDF,
-            title: Some("PDF文档标题".to_string()),
-            author: Some("未知作者".to_string()),
-            pages,
-            metadata: DocumentMetadata {
-                file_path: document_path.clone(),
-                file_size: file_metadata.len(),
-                created_at: Some(chrono::Utc::now().to_rfc3339()),
-                modified_at: Some(chrono::Utc::now().to_rfc3339()),
-                page_count: 1,
-                language: Some("zh".to_string()),
-            },
-        })
+        Err(AppError::UnsupportedFormat(
+            "真实 PDF 解析尚未实现，不能返回模拟 PDF 内容。".to_string(),
+        ))
     }
 
     /// 解析PowerPoint文档
     async fn parse_powerpoint(&self, document_path: &PathBuf) -> Result<DocumentContent, AppError> {
         info!("解析PowerPoint文档: {}", document_path.display());
-        
-        // TODO: 集成PowerPoint解析库
-        // 模拟解析时间
-        tokio::time::sleep(std::time::Duration::from_secs(3)).await;
-        
-        let file_metadata = std::fs::metadata(document_path)
-            .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
 
-        // 生成模拟内容
-        let pages = vec![
-            PageContent {
-                page_number: 1,
-                text: "这是PowerPoint演示文稿第一页的模拟内容。".to_string(),
-                images: vec![
-                    ImageInfo {
-                        id: "img_1".to_string(),
-                        path: None,
-                        description: Some("示例图片".to_string()),
-                        position: Some(Position { x: 100.0, y: 200.0 }),
-                        size: Some(Size { width: 300.0, height: 200.0 }),
-                    },
-                ],
-                tables: vec![],
-                layout: Some(LayoutInfo {
-                    width: 1280.0,
-                    height: 720.0,
-                    margins: Margins {
-                        top: 50.0,
-                        right: 50.0,
-                        bottom: 50.0,
-                        left: 50.0,
-                    },
-                }),
-            },
-        ];
-
-        Ok(DocumentContent {
-            document_type: DocumentType::PowerPoint,
-            title: Some("PowerPoint演示文稿".to_string()),
-            author: Some("未知作者".to_string()),
-            pages,
-            metadata: DocumentMetadata {
-                file_path: document_path.clone(),
-                file_size: file_metadata.len(),
-                created_at: Some(chrono::Utc::now().to_rfc3339()),
-                modified_at: Some(chrono::Utc::now().to_rfc3339()),
-                page_count: 1,
-                language: Some("zh".to_string()),
-            },
-        })
+        Err(AppError::UnsupportedFormat(
+            "真实 PowerPoint 解析尚未实现，不能返回模拟 PPTX 内容。".to_string(),
+        ))
     }
 
     /// 解析Markdown文档
@@ -297,10 +213,6 @@ impl DocumentParser {
         
         let file_metadata = std::fs::metadata(document_path)
             .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
-
-        // TODO: 使用markdown解析库（如pulldown-cmark）
-        // 模拟解析时间
-        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 
         // 简单解析：将整个内容作为一页
         let pages = vec![
@@ -334,60 +246,10 @@ impl DocumentParser {
     /// 解析Word文档
     async fn parse_word(&self, document_path: &PathBuf) -> Result<DocumentContent, AppError> {
         info!("解析Word文档: {}", document_path.display());
-        
-        // TODO: 集成Word文档解析库
-        // 模拟解析时间
-        tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-        
-        let file_metadata = std::fs::metadata(document_path)
-            .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
 
-        // 生成模拟内容
-        let pages = vec![
-            PageContent {
-                page_number: 1,
-                text: "这是Word文档的模拟内容。".to_string(),
-                images: vec![],
-                tables: vec![
-                    TableInfo {
-                        id: "table_1".to_string(),
-                        rows: 3,
-                        columns: 2,
-                        data: vec![
-                            vec!["标题1".to_string(), "标题2".to_string()],
-                            vec!["数据1".to_string(), "数据2".to_string()],
-                            vec!["数据3".to_string(), "数据4".to_string()],
-                        ],
-                        position: Some(Position { x: 50.0, y: 100.0 }),
-                    },
-                ],
-                layout: Some(LayoutInfo {
-                    width: 595.0,
-                    height: 842.0,
-                    margins: Margins {
-                        top: 72.0,
-                        right: 72.0,
-                        bottom: 72.0,
-                        left: 72.0,
-                    },
-                }),
-            },
-        ];
-
-        Ok(DocumentContent {
-            document_type: DocumentType::Word,
-            title: Some("Word文档标题".to_string()),
-            author: Some("未知作者".to_string()),
-            pages,
-            metadata: DocumentMetadata {
-                file_path: document_path.clone(),
-                file_size: file_metadata.len(),
-                created_at: Some(chrono::Utc::now().to_rfc3339()),
-                modified_at: Some(chrono::Utc::now().to_rfc3339()),
-                page_count: 1,
-                language: Some("zh".to_string()),
-            },
-        })
+        Err(AppError::UnsupportedFormat(
+            "真实 Word 解析尚未实现，不能返回模拟 Word 内容。".to_string(),
+        ))
     }
 }
 

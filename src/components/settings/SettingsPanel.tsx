@@ -73,11 +73,11 @@ export function SettingsPanel() {
                 <div className="setting-item">
                   <label>默认源语言</label>
                   <select
-                    value={config.ai.defaultSourceLanguage}
+                    value={config.ai.default_language}
                     onChange={(e) =>
                       setConfig({
                         ...config,
-                        ai: { ...config.ai, defaultSourceLanguage: e.target.value },
+                        ai: { ...config.ai, default_language: e.target.value },
                       })
                     }
                   >
@@ -90,15 +90,15 @@ export function SettingsPanel() {
                 <div className="setting-item">
                   <label>TTS 引擎</label>
                   <select
-                    value={config.ai.selectedTtsEngine}
+                    value={config.ai.selected_tts_engine}
                     onChange={(e) =>
                       setConfig({
                         ...config,
-                        ai: { ...config.ai, selectedTtsEngine: e.target.value },
+                        ai: { ...config.ai, selected_tts_engine: e.target.value },
                       })
                     }
                   >
-                    {config.ai.availableTtsEngines.map((engine) => (
+                    {config.ai.available_tts_engines.map((engine) => (
                       <option key={engine.id} value={engine.id}>
                         {engine.name} ({engine.category})
                       </option>
@@ -106,11 +106,11 @@ export function SettingsPanel() {
                   </select>
                 </div>
 
-                {config.ai.availableTtsEngines.length > 0 && (
+                {config.ai.available_tts_engines.length > 0 && (
                   <div className="engine-info">
                     {(() => {
-                      const engine = config.ai.availableTtsEngines.find(
-                        (e) => e.id === config.ai.selectedTtsEngine
+                      const engine = config.ai.available_tts_engines.find(
+                        (e) => e.id === config.ai.selected_tts_engine
                       );
                       if (!engine) return null;
                       return (
@@ -118,7 +118,7 @@ export function SettingsPanel() {
                           <p><strong>类型:</strong> {engine.category}</p>
                           <p><strong>体积:</strong> {engine.footprint}</p>
                           <p><strong>许可证:</strong> {engine.license}</p>
-                          <p><strong>适用场景:</strong> {engine.recommendedUse}</p>
+                          <p><strong>适用场景:</strong> {engine.recommended_use}</p>
                         </>
                       );
                     })()}
@@ -131,11 +131,11 @@ export function SettingsPanel() {
                 <div className="setting-item">
                   <label>默认输出格式</label>
                   <select
-                    value={config.video.defaultOutputFormat}
+                    value={config.video.default_output_format}
                     onChange={(e) =>
                       setConfig({
                         ...config,
-                        video: { ...config.video, defaultOutputFormat: e.target.value },
+                        video: { ...config.video, default_output_format: e.target.value },
                       })
                     }
                   >
@@ -149,11 +149,11 @@ export function SettingsPanel() {
                 <div className="setting-item">
                   <label>默认视频质量</label>
                   <select
-                    value={config.video.defaultQuality}
+                    value={config.video.default_quality}
                     onChange={(e) =>
                       setConfig({
                         ...config,
-                        video: { ...config.video, defaultQuality: e.target.value },
+                        video: { ...config.video, default_quality: e.target.value },
                       })
                     }
                   >
@@ -173,11 +173,11 @@ export function SettingsPanel() {
                     type="number"
                     min="72"
                     max="600"
-                    value={config.document.pdfDpi}
+                    value={config.document.pdf_dpi}
                     onChange={(e) =>
                       setConfig({
                         ...config,
-                        document: { ...config.document, pdfDpi: parseInt(e.target.value) },
+                        document: { ...config.document, pdf_dpi: parseInt(e.target.value) },
                       })
                     }
                   />

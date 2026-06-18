@@ -143,7 +143,7 @@ MIT ライセンス。詳細は [LICENSE](LICENSE) をご覧ください。
 
 ## お問い合わせ
 
-- メール：developer@skstudio.cn
+- メール：<developer@skstudio.cn>
 - GitHub：[sihuangtech/sk-clip-desktop](https://github.com/sihuangtech/sk-clip-desktop)
 
 ## Star History

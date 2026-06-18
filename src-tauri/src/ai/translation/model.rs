@@ -42,28 +42,10 @@ impl TranslationModel {
     }
 
     async fn download_models(&self) -> Result<(), AppError> {
-        info!("下载翻译模型...");
-        
-        // 模拟下载多个语言对的模型
-        let language_pairs = vec![
-            ("zh", "en"), ("en", "zh"),
-            ("zh", "ja"), ("ja", "zh"),
-            ("zh", "ko"), ("ko", "zh"),
-        ];
-        
-        for (src, tgt) in language_pairs {
-            let model_file = self.models_dir.join(format!("{}-{}.bin", src, tgt));
-            if !model_file.exists() {
-                info!("下载翻译模型: {} -> {}", src, tgt);
-                tokio::time::sleep(std::time::Duration::from_millis(500)).await;
-                std::fs::write(&model_file, b"TRANSLATION_MODEL_PLACEHOLDER").map_err(|e| {
-                    AppError::FileError(format!("保存翻译模型失败: {}", e))
-                })?;
-            }
-        }
-        
-        info!("翻译模型下载完成");
-        Ok(())
+        info!("检查翻译模型目录: {}", self.models_dir.display());
+        Err(AppError::ModelInitializationError(
+            "真实翻译模型下载/加载尚未接入，不能创建占位模型文件。".to_string(),
+        ))
     }
 
     pub fn is_initialized(&self) -> bool {

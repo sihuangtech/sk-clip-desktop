@@ -43,9 +43,8 @@ pub async fn convert_document_to_assets(
     document_content: DocumentContent
 ) -> Result<Vec<String>, AppError> {
     info!("调用 convert_document_to_assets 命令，文档: {:?}", document_content.title);
-    
-    // TODO: 实现文档到视频资源的转换
-    tokio::time::sleep(std::time::Duration::from_secs(2)).await;
-    
-    Ok(vec!["asset1.png".to_string(), "asset2.png".to_string()])
+
+    Err(AppError::DocumentParsingError(
+        "真实文档转视频资源功能尚未实现，不能返回模拟资源路径。".to_string(),
+    ))
 } 

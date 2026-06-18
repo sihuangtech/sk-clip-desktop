@@ -130,12 +130,13 @@ sk-clip-desktop/
 
 ## Current Status
 
-This is a prototype. Several features are partially implemented or mocked:
+This is a prototype. The project avoids returning fabricated processing output:
 
-- Core video processing uses FFmpeg
-- AI pipeline (ASR, MT, TTS) uses simulated backends
-- Timeline editor has basic functionality
-- Document import supports PPTX, Markdown, PDF
+- Core video processing uses real FFmpeg/FFprobe commands where implemented.
+- Markdown import reads real local files.
+- AI pipeline commands return explicit errors until real ASR, MT, and TTS engines are connected.
+- PDF, PowerPoint, and Word parsing return explicit errors until real parsers are connected.
+- Timeline editor has basic frontend functionality; persistence/export needs further integration.
 
 ## License
 
@@ -143,7 +144,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Contact
 
-- Email: developer@skstudio.cn
+- Email: <developer@skstudio.cn>
 - GitHub: [sihuangtech/sk-clip-desktop](https://github.com/sihuangtech/sk-clip-desktop)
 
 ## Star History
