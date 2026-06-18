@@ -1,6 +1,11 @@
 use std::path::PathBuf;
 use crate::models::AppError;
 use log::info;
+use quick_xml::events::Event;
+use quick_xml::Reader;
+use std::fs::File;
+use std::io::Read;
+use zip::ZipArchive;
 
 /// 文档内容结构
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -189,8 +194,28 @@ impl DocumentParser {
     async fn parse_pdf(&self, document_path: &PathBuf) -> Result<DocumentContent, AppError> {
         info!("解析PDF文档: {}", document_path.display());
 
-        Err(AppError::UnsupportedFormat(
-            "真实 PDF 解析尚未实现，不能返回模拟 PDF 内容。".to_string(),
+        let doc = lopdf::Document::load(document_path)
+            .map_err(|e| AppError::DocumentParsingError(format!("读取PDF失败: {}", e)))?;
+        let file_metadata = std::fs::metadata(document_path)
+            .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
+
+        let mut pages = Vec::new();
+        for (index, page_number) in doc.get_pages().keys().enumerate() {
+            let text = doc.extract_text(&[*page_number]).unwrap_or_default();
+            pages.push(PageContent {
+                page_number: index + 1,
+                text,
+                images: vec![],
+                tables: vec![],
+                layout: None,
+            });
+        }
+
+        Ok(Self::build_document_content(
+            DocumentType::PDF,
+            document_path,
+            file_metadata.len(),
+            pages,
         ))
     }
 
@@ -198,8 +223,56 @@ impl DocumentParser {
     async fn parse_powerpoint(&self, document_path: &PathBuf) -> Result<DocumentContent, AppError> {
         info!("解析PowerPoint文档: {}", document_path.display());
 
-        Err(AppError::UnsupportedFormat(
-            "真实 PowerPoint 解析尚未实现，不能返回模拟 PPTX 内容。".to_string(),
+        if document_path.extension().and_then(|ext| ext.to_str()) != Some("pptx") {
+            return Err(AppError::UnsupportedFormat(
+                "当前仅支持真实解析 PPTX；旧版 PPT 二进制格式尚未支持。".to_string(),
+            ));
+        }
+
+        let file_metadata = std::fs::metadata(document_path)
+            .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
+        let mut archive = Self::open_zip(document_path)?;
+        let mut slide_names = Vec::new();
+
+        for index in 0..archive.len() {
+            let file = archive
+                .by_index(index)
+                .map_err(|e| AppError::DocumentParsingError(format!("读取PPTX条目失败: {}", e)))?;
+            let name = file.name().to_string();
+            if name.starts_with("ppt/slides/slide") && name.ends_with(".xml") {
+                slide_names.push(name);
+            }
+        }
+
+        slide_names.sort_by_key(|name| Self::natural_number_key(name));
+
+        let mut pages = Vec::new();
+        for (index, name) in slide_names.iter().enumerate() {
+            let xml = Self::read_zip_text(&mut archive, name)?;
+            let text = Self::extract_xml_text(&xml);
+            pages.push(PageContent {
+                page_number: index + 1,
+                text,
+                images: vec![],
+                tables: vec![],
+                layout: Some(LayoutInfo {
+                    width: 1280.0,
+                    height: 720.0,
+                    margins: Margins {
+                        top: 0.0,
+                        right: 0.0,
+                        bottom: 0.0,
+                        left: 0.0,
+                    },
+                }),
+            });
+        }
+
+        Ok(Self::build_document_content(
+            DocumentType::PowerPoint,
+            document_path,
+            file_metadata.len(),
+            pages,
         ))
     }
 
@@ -247,9 +320,107 @@ impl DocumentParser {
     async fn parse_word(&self, document_path: &PathBuf) -> Result<DocumentContent, AppError> {
         info!("解析Word文档: {}", document_path.display());
 
-        Err(AppError::UnsupportedFormat(
-            "真实 Word 解析尚未实现，不能返回模拟 Word 内容。".to_string(),
+        if document_path.extension().and_then(|ext| ext.to_str()) != Some("docx") {
+            return Err(AppError::UnsupportedFormat(
+                "当前仅支持真实解析 DOCX；旧版 DOC 二进制格式尚未支持。".to_string(),
+            ));
+        }
+
+        let file_metadata = std::fs::metadata(document_path)
+            .map_err(|e| AppError::FileError(format!("无法获取文件信息: {}", e)))?;
+        let mut archive = Self::open_zip(document_path)?;
+        let xml = Self::read_zip_text(&mut archive, "word/document.xml")?;
+        let text = Self::extract_xml_text(&xml);
+
+        let pages = vec![PageContent {
+            page_number: 1,
+            text,
+            images: vec![],
+            tables: vec![],
+            layout: None,
+        }];
+
+        Ok(Self::build_document_content(
+            DocumentType::Word,
+            document_path,
+            file_metadata.len(),
+            pages,
         ))
+    }
+
+    fn build_document_content(
+        document_type: DocumentType,
+        document_path: &PathBuf,
+        file_size: u64,
+        pages: Vec<PageContent>,
+    ) -> DocumentContent {
+        let page_count = pages.len();
+        DocumentContent {
+            document_type,
+            title: document_path
+                .file_stem()
+                .and_then(|s| s.to_str())
+                .map(|s| s.to_string()),
+            author: None,
+            pages,
+            metadata: DocumentMetadata {
+                file_path: document_path.clone(),
+                file_size,
+                created_at: Some(chrono::Utc::now().to_rfc3339()),
+                modified_at: Some(chrono::Utc::now().to_rfc3339()),
+                page_count,
+                language: None,
+            },
+        }
+    }
+
+    fn open_zip(document_path: &PathBuf) -> Result<ZipArchive<File>, AppError> {
+        let file = File::open(document_path)
+            .map_err(|e| AppError::FileError(format!("打开压缩文档失败: {}", e)))?;
+        ZipArchive::new(file)
+            .map_err(|e| AppError::DocumentParsingError(format!("读取压缩文档失败: {}", e)))
+    }
+
+    fn read_zip_text(archive: &mut ZipArchive<File>, name: &str) -> Result<String, AppError> {
+        let mut file = archive
+            .by_name(name)
+            .map_err(|e| AppError::DocumentParsingError(format!("读取文档内部文件 {} 失败: {}", name, e)))?;
+        let mut content = String::new();
+        file.read_to_string(&mut content)
+            .map_err(|e| AppError::DocumentParsingError(format!("读取XML文本失败: {}", e)))?;
+        Ok(content)
+    }
+
+    fn extract_xml_text(xml: &str) -> String {
+        let mut reader = Reader::from_str(xml);
+        reader.config_mut().trim_text(true);
+
+        let mut parts = Vec::new();
+        loop {
+            match reader.read_event() {
+                Ok(Event::Text(text)) => {
+                    if let Ok(decoded) = text.decode() {
+                        let text = decoded.trim();
+                        if !text.is_empty() {
+                            parts.push(text.to_string());
+                        }
+                    }
+                }
+                Ok(Event::Eof) => break,
+                Err(_) => break,
+                _ => {}
+            }
+        }
+
+        parts.join("\n")
+    }
+
+    fn natural_number_key(name: &str) -> usize {
+        name.chars()
+            .filter(|ch| ch.is_ascii_digit())
+            .collect::<String>()
+            .parse()
+            .unwrap_or(usize::MAX)
     }
 }
 

@@ -11,7 +11,7 @@
       "cache_translations": true
     },
     "tts": {
-      "preferred_engine": "neural",
+      "preferred_engine": "piper",
       "preferred_voice": {
         "zh": "zh_female",
         "en": "en_female"

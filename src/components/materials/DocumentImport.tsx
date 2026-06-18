@@ -4,6 +4,7 @@ import { useAppContext } from '../../context/AppContext';
 import { tauriApi } from '../../api/tauri';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { ErrorMessage } from '../common/ErrorMessage';
+import { FileText } from 'lucide-react';
 
 export function DocumentImport() {
   const { setAppState } = useAppContext();
@@ -43,7 +44,7 @@ export function DocumentImport() {
     <div className="document-import">
       <div className="upload-area">
         <button type="button" className="upload-label" onClick={handleFileSelect}>
-          <div className="upload-icon">📄</div>
+          <div className="upload-icon"><FileText size={40} strokeWidth={1.8} /></div>
           <p>点击选择文档文件</p>
           <p className="upload-hint">支持 PPTX、Markdown、PDF 格式</p>
         </button>

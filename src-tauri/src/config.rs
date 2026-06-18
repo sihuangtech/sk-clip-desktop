@@ -140,93 +140,42 @@ impl Default for AppConfig {
 }
 
 fn default_tts_engine() -> String {
-    "piper".to_string()
+    load_tts_default_engine_from_models_config().unwrap_or_else(|| "piper".to_string())
 }
 
 fn default_tts_engines() -> Vec<TtsEngineOption> {
-    vec![
-        TtsEngineOption {
-            id: "espeak-ng".to_string(),
-            name: "eSpeak NG".to_string(),
-            category: "极轻量规则引擎".to_string(),
-            footprint: "几 MB，CPU 运行".to_string(),
-            license: "GPL-3.0".to_string(),
-            repository_url: "https://github.com/espeak-ng/espeak-ng".to_string(),
-            recommended_use: "兜底朗读、调试、多语言覆盖".to_string(),
-        },
-        TtsEngineOption {
-            id: "flite".to_string(),
-            name: "Flite".to_string(),
-            category: "极轻量嵌入式引擎".to_string(),
-            footprint: "小体积，CPU 运行".to_string(),
-            license: "BSD-like".to_string(),
-            repository_url: "https://github.com/festvox/flite".to_string(),
-            recommended_use: "英文兜底朗读、低资源设备".to_string(),
-        },
-        TtsEngineOption {
-            id: "tinytts".to_string(),
-            name: "TinyTTS".to_string(),
-            category: "极轻量神经网络".to_string(),
-            footprint: "约 3.4 MB ONNX，CPU 运行".to_string(),
-            license: "MIT".to_string(),
-            repository_url: "https://github.com/tronghieuit/tiny-tts".to_string(),
-            recommended_use: "英文轻量实验、极小安装包".to_string(),
-        },
-        TtsEngineOption {
-            id: "kitten-tts".to_string(),
-            name: "KittenTTS".to_string(),
-            category: "轻量神经网络".to_string(),
-            footprint: "约 25-80 MB ONNX，CPU 运行".to_string(),
-            license: "Apache-2.0".to_string(),
-            repository_url: "https://github.com/KittenML/KittenTTS".to_string(),
-            recommended_use: "轻量自然朗读、桌面端默认候选".to_string(),
-        },
-        TtsEngineOption {
-            id: "piper".to_string(),
-            name: "Piper".to_string(),
-            category: "轻量神经网络".to_string(),
-            footprint: "按语音包下载，CPU 运行".to_string(),
-            license: "MIT / GPL 分支需分别确认".to_string(),
-            repository_url: "https://github.com/rhasspy/piper".to_string(),
-            recommended_use: "稳定离线朗读、默认内置引擎".to_string(),
-        },
-        TtsEngineOption {
-            id: "kokoro".to_string(),
-            name: "Kokoro ONNX".to_string(),
-            category: "中轻量高质量神经网络".to_string(),
-            footprint: "量化约 80 MB，CPU 可运行".to_string(),
-            license: "Apache-2.0".to_string(),
-            repository_url: "https://github.com/thewh1teagle/kokoro-onnx".to_string(),
-            recommended_use: "更自然的讲解配音、高质量默认候选".to_string(),
-        },
-        TtsEngineOption {
-            id: "sherpa-onnx".to_string(),
-            name: "sherpa-onnx TTS".to_string(),
-            category: "跨平台 ONNX 运行层".to_string(),
-            footprint: "取决于所选模型，支持 CPU".to_string(),
-            license: "Apache-2.0".to_string(),
-            repository_url: "https://github.com/k2-fsa/sherpa-onnx".to_string(),
-            recommended_use: "统一接入 Piper、Kokoro、VITS 等本地模型".to_string(),
-        },
-        TtsEngineOption {
-            id: "gpt-sovits".to_string(),
-            name: "GPT-SoVITS".to_string(),
-            category: "声音克隆/高级配音".to_string(),
-            footprint: "较重，建议 Python sidecar/GPU 可选".to_string(),
-            license: "MIT".to_string(),
-            repository_url: "https://github.com/RVC-Boss/GPT-SoVITS".to_string(),
-            recommended_use: "视频翻译配音、少样本音色克隆".to_string(),
-        },
-        TtsEngineOption {
-            id: "f5-tts".to_string(),
-            name: "F5-TTS".to_string(),
-            category: "声音克隆/高级配音".to_string(),
-            footprint: "较重，建议 Python sidecar/GPU 可选".to_string(),
-            license: "代码 MIT，预训练权重需单独确认".to_string(),
-            repository_url: "https://github.com/SWivid/F5-TTS".to_string(),
-            recommended_use: "高质量克隆实验、非默认高级引擎".to_string(),
-        },
-    ]
+    load_tts_engine_options_from_models_config().unwrap_or_default()
+}
+
+fn find_models_config_path() -> Option<PathBuf> {
+    let current_dir = std::env::current_dir().ok()?;
+    let candidates = [
+        current_dir.join("models").join("models.json"),
+        current_dir.parent()?.join("models").join("models.json"),
+    ];
+
+    candidates.into_iter().find(|path| path.exists())
+}
+
+fn load_models_config_json() -> Option<serde_json::Value> {
+    let path = find_models_config_path()?;
+    let content = std::fs::read_to_string(path).ok()?;
+    serde_json::from_str(&content).ok()
+}
+
+fn load_tts_default_engine_from_models_config() -> Option<String> {
+    let config = load_models_config_json()?;
+    config
+        .pointer("/models/tts/ui_default_engine")
+        .or_else(|| config.pointer("/models/tts/default_engine"))
+        .and_then(|value| value.as_str())
+        .map(ToString::to_string)
+}
+
+fn load_tts_engine_options_from_models_config() -> Option<Vec<TtsEngineOption>> {
+    let config = load_models_config_json()?;
+    let value = config.pointer("/models/tts/engine_options")?.clone();
+    serde_json::from_value(value).ok()
 }
 
 /// 配置管理器
@@ -246,13 +195,15 @@ impl ConfigManager {
 
         let config_path = config_dir.join("config.json");
 
-        let config = if config_path.exists() {
+        let mut config = if config_path.exists() {
             Self::load_config(&config_path)?
         } else {
             let default_config = AppConfig::default();
             Self::save_config(&config_path, &default_config)?;
             default_config
         };
+
+        Self::refresh_config_driven_options(&mut config);
 
         Ok(Self {
             config,
@@ -266,7 +217,31 @@ impl ConfigManager {
 
     pub fn update_config(&mut self, config: AppConfig) -> Result<(), AppError> {
         self.config = config;
+        Self::refresh_config_driven_options(&mut self.config);
         Self::save_config(&self.config_path, &self.config)
+    }
+
+    fn refresh_config_driven_options(config: &mut AppConfig) {
+        if let Some(tts_engines) = load_tts_engine_options_from_models_config() {
+            config.ai.available_tts_engines = tts_engines;
+        }
+
+        if !config
+            .ai
+            .available_tts_engines
+            .iter()
+            .any(|engine| engine.id == config.ai.selected_tts_engine)
+        {
+            config.ai.selected_tts_engine = load_tts_default_engine_from_models_config()
+                .or_else(|| {
+                    config
+                        .ai
+                        .available_tts_engines
+                        .first()
+                        .map(|engine| engine.id.clone())
+                })
+                .unwrap_or_else(|| "piper".to_string());
+        }
     }
 
     fn load_config(path: &PathBuf) -> Result<AppConfig, AppError> {

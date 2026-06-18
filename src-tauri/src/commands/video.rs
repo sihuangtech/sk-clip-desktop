@@ -2,13 +2,13 @@
 
 // 视频相关命令模块，处理视频上传、翻译、编辑等功能
 
-use tauri::{AppHandle, State, Manager};
+use tauri::{AppHandle, State};
 use log::{info, error};
 use std::path::{Path, PathBuf};
 use std::fs;
 use uuid::Uuid;
 
-use crate::models::{AppState, AppError, TaskStatus, TranslationTask};
+use crate::models::{AppState, AppError, TranslationTask};
 use crate::file_manager;
 use crate::video::{VideoMetadata};
 use crate::commands::basic::is_language_supported;
@@ -48,8 +48,8 @@ pub async fn upload_video(_app_handle: AppHandle, path: String) -> Result<String
 // 翻译视频命令
 #[tauri::command]
 pub async fn translate_video(
-    app_handle: AppHandle, 
-    state: State<'_, AppState>,
+    _app_handle: AppHandle, 
+    _state: State<'_, AppState>,
     video_path: String,
     source_language: String,
     target_language: String,
@@ -69,80 +69,10 @@ pub async fn translate_video(
         error!("不受支持的目标语言: {}", target_language);
         return Err(AppError::UnsupportedLanguage(target_language));
     }
-    
-    let task_id = Uuid::new_v4().to_string();
-    info!("创建新的翻译任务，ID: {}", task_id);
 
-    let app_data_dir = file_manager::get_app_data_dir()?;
-    let output_dir = app_data_dir.join("outputs");
-    
-    if !output_dir.exists() {
-        fs::create_dir_all(&output_dir).map_err(|e| {
-            error!("创建输出目录失败: {}: {}", output_dir.display(), e);
-            AppError::FileError(e.to_string())
-        })?;
-        info!("已创建输出目录: {}", output_dir.display());
-    }
-    
-    let output_path = output_dir.join(format!("translated_{}.mp4", task_id));
-    let output_path_str = output_path.to_string_lossy().to_string();
-    
-    let task = TranslationTask {
-        id: task_id.clone(),
-        video_path: video_path.clone(),
-        status: TaskStatus::Pending,
-        source_language: source_language.clone(),
-        target_language: target_language.clone(),
-        output_path: Some(output_path_str.clone()),
-        error_message: None,
-    };
-    
-    state.tasks.lock().await.insert(task_id.clone(), task);
-    info!("任务 {} 已添加到状态管理", task_id);
-    
-    let task_id_clone = task_id.clone();
-    let video_path_clone = video_path.clone();
-    let source_language_clone = source_language.clone();
-    let target_language_clone = target_language.clone();
-    let output_path_clone = output_path.clone();
-
-    tokio::spawn(async move {
-        info!("任务 {}：开始处理流程", task_id_clone);
-        
-        let app_state: State<AppState> = app_handle.state();
-        
-        {
-            let mut tasks = app_state.tasks.lock().await;
-            if let Some(task) = tasks.get_mut(&task_id_clone) {
-                task.status = TaskStatus::Processing;
-                info!("任务 {} 状态更新为 Processing", task_id_clone);
-            }
-        }
-
-        let process_result = process_video_translation_flow(
-            &video_path_clone,
-            &output_path_clone,
-            &source_language_clone,
-            &target_language_clone,
-        ).await;
-
-        let mut tasks = app_state.tasks.lock().await;
-        if let Some(task) = tasks.get_mut(&task_id_clone) {
-            match process_result {
-                Ok(_) => {
-                    task.status = TaskStatus::Completed;
-                    info!("任务 {} 状态更新为 Completed", task_id_clone);
-                },
-                Err(e) => {
-                    task.status = TaskStatus::Failed;
-                    task.error_message = Some(e.to_string());
-                    error!("任务 {} 失败: {}", task_id_clone, e);
-                }
-            }
-        }
-    });
-    
-    Ok(task_id)
+    Err(AppError::AiModelError(
+        "真实视频翻译流水线尚未配置：需要先接入真实 ASR、翻译、TTS 和音视频合成引擎。".to_string(),
+    ))
 }
 
 // 实际视频翻译处理流程函数（简化版本）

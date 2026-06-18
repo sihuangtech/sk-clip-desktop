@@ -5,6 +5,7 @@ import type {
   SpeechSynthesisResult,
   TranslationResult,
   TranslationTask,
+  VideoMetadata,
 } from '../types';
 
 export const tauriApi = {
@@ -23,7 +24,7 @@ export const tauriApi = {
     invoke<string>('upload_video', { path }),
 
   getVideoInfo: (path: string) =>
-    invoke<string>('get_video_info', { path }),
+    invoke<VideoMetadata>('get_video_info', { videoPath: path }),
 
   extractAudioFromVideo: (videoPath: string, outputAudioPath: string) =>
     invoke<string>('extract_audio_from_video', { videoPath, outputAudioPath }),

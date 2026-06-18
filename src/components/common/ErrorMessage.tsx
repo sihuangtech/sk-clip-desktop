@@ -1,3 +1,5 @@
+import { AlertTriangle } from 'lucide-react';
+
 interface ErrorMessageProps {
   message: string;
 }
@@ -5,7 +7,7 @@ interface ErrorMessageProps {
 export function ErrorMessage({ message }: ErrorMessageProps) {
   return (
     <div className="error-message">
-      <span className="error-icon">⚠️</span>
+      <AlertTriangle className="error-icon" size={16} />
       <span>{message}</span>
     </div>
   );

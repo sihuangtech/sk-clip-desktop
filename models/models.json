@@ -92,6 +92,153 @@
     "tts": {
       "enabled": true,
       "default_engine": "neural",
+      "ui_default_engine": "piper",
+      "engine_options": [
+        {
+          "id": "espeak-ng",
+          "name": "eSpeak NG",
+          "category": "轻量离线/规则引擎",
+          "footprint": "几 MB，CPU 运行",
+          "license": "GPL-3.0",
+          "repository_url": "https://github.com/espeak-ng/espeak-ng",
+          "recommended_use": "兜底朗读、调试、多语言覆盖"
+        },
+        {
+          "id": "flite",
+          "name": "Flite",
+          "category": "轻量离线/规则引擎",
+          "footprint": "小体积，CPU 运行",
+          "license": "BSD-like",
+          "repository_url": "https://github.com/festvox/flite",
+          "recommended_use": "英文兜底朗读、低资源设备"
+        },
+        {
+          "id": "tinytts",
+          "name": "TinyTTS",
+          "category": "轻量离线/神经网络",
+          "footprint": "约 3.4 MB ONNX，CPU 运行",
+          "license": "MIT",
+          "repository_url": "https://github.com/tronghieuit/tiny-tts",
+          "recommended_use": "英文轻量实验、极小安装包"
+        },
+        {
+          "id": "kitten-tts",
+          "name": "KittenTTS",
+          "category": "轻量离线/神经网络",
+          "footprint": "约 25-80 MB ONNX，CPU 运行",
+          "license": "Apache-2.0",
+          "repository_url": "https://github.com/KittenML/KittenTTS",
+          "recommended_use": "轻量自然朗读、桌面端默认候选"
+        },
+        {
+          "id": "piper",
+          "name": "Piper",
+          "category": "轻量离线/神经网络",
+          "footprint": "按语音包下载，CPU 运行",
+          "license": "MIT / GPL 分支需分别确认",
+          "repository_url": "https://github.com/rhasspy/piper",
+          "recommended_use": "稳定离线朗读、默认内置引擎"
+        },
+        {
+          "id": "kokoro",
+          "name": "Kokoro ONNX",
+          "category": "轻量离线/高质量神经网络",
+          "footprint": "量化约 80 MB，CPU 可运行",
+          "license": "Apache-2.0",
+          "repository_url": "https://github.com/thewh1teagle/kokoro-onnx",
+          "recommended_use": "更自然的讲解配音、高质量默认候选"
+        },
+        {
+          "id": "sherpa-onnx",
+          "name": "sherpa-onnx TTS",
+          "category": "轻量离线/跨平台 ONNX 运行层",
+          "footprint": "取决于所选模型，支持 CPU",
+          "license": "Apache-2.0",
+          "repository_url": "https://github.com/k2-fsa/sherpa-onnx",
+          "recommended_use": "统一接入 Piper、Kokoro、VITS 等本地模型"
+        },
+        {
+          "id": "gpt-sovits",
+          "name": "GPT-SoVITS",
+          "category": "成熟实用/高级配音",
+          "footprint": "较重，建议 Python sidecar/GPU 可选",
+          "license": "MIT",
+          "repository_url": "https://github.com/RVC-Boss/GPT-SoVITS",
+          "recommended_use": "视频翻译配音、少样本音色克隆"
+        },
+        {
+          "id": "f5-tts",
+          "name": "F5-TTS",
+          "category": "2026优先评估/零样本声音克隆",
+          "footprint": "较重，建议 Python sidecar/GPU 可选",
+          "license": "代码 MIT，预训练权重需单独确认",
+          "repository_url": "https://github.com/SWivid/F5-TTS",
+          "recommended_use": "高质量克隆实验、非默认高级引擎"
+        },
+        {
+          "id": "openvoice",
+          "name": "OpenVoice",
+          "category": "成熟实用/即时声音克隆",
+          "footprint": "中等，建议 Python sidecar；CPU/GPU 取决于模型配置",
+          "license": "MIT",
+          "repository_url": "https://github.com/myshell-ai/OpenVoice",
+          "recommended_use": "少样本音色克隆、多语言配音实验"
+        },
+        {
+          "id": "cosyvoice",
+          "name": "CosyVoice",
+          "category": "2026优先评估/多语言零样本TTS",
+          "footprint": "较重，建议 Python sidecar/GPU 可选",
+          "license": "Apache-2.0",
+          "repository_url": "https://github.com/FunAudioLLM/CosyVoice",
+          "recommended_use": "中英多语言配音、零样本/跨语言声音克隆"
+        },
+        {
+          "id": "index-tts",
+          "name": "IndexTTS / IndexTTS2",
+          "category": "2026优先评估/可控零样本TTS",
+          "footprint": "较重，建议 Python sidecar/GPU；IndexTTS2 强调情感和时长控制",
+          "license": "Apache-2.0；商用前仍需核对模型权重条款",
+          "repository_url": "https://github.com/index-tts/index-tts",
+          "recommended_use": "中文优先、可控发音、视频配音时长控制和情绪表达评估"
+        },
+        {
+          "id": "spark-tts",
+          "name": "Spark-TTS",
+          "category": "2026优先评估/大模型零样本TTS",
+          "footprint": "较重，建议 Python sidecar/GPU",
+          "license": "Apache-2.0",
+          "repository_url": "https://github.com/SparkAudio/Spark-TTS",
+          "recommended_use": "高自然度配音、可控声音生成评估"
+        },
+        {
+          "id": "chatterbox",
+          "name": "Chatterbox TTS",
+          "category": "实验前沿/开源TTS声音克隆",
+          "footprint": "中重，建议 Python sidecar/GPU 可选",
+          "license": "MIT",
+          "repository_url": "https://github.com/resemble-ai/chatterbox",
+          "recommended_use": "英文优先的自然朗读和声音克隆候选"
+        },
+        {
+          "id": "fish-speech",
+          "name": "Fish Speech",
+          "category": "许可证风险/多语言TTS声音克隆",
+          "footprint": "较重，建议 Python sidecar/GPU",
+          "license": "非标准/研究许可，商用前需单独确认",
+          "repository_url": "https://github.com/fishaudio/fish-speech",
+          "recommended_use": "研究评估、多语言高质量配音候选；不建议默认商用"
+        },
+        {
+          "id": "chattts",
+          "name": "ChatTTS",
+          "category": "许可证风险/对话式TTS",
+          "footprint": "中重，建议 Python sidecar/GPU 可选",
+          "license": "非商用/研究限制需确认",
+          "repository_url": "https://github.com/2noise/ChatTTS",
+          "recommended_use": "对话语气、播客式内容研究评估；不建议默认商用"
+        }
+      ],
       "engines": {
         "espeak": {
           "description": "eSpeak TTS 引擎，轻量级",

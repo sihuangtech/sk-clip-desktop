@@ -8,6 +8,7 @@ import {
   TRACK_COLORS,
   TRACK_TYPE_LABELS,
 } from '../../types/timeline';
+import { Lock, Pause, Play, Plus, Unlock, Volume2, VolumeX } from 'lucide-react';
 
 const DEFAULT_TRACKS: TimelineTrack[] = [
   {
@@ -135,7 +136,11 @@ export function ProjectTimeline() {
     <div className="timeline-footer">
       <div className="timeline-controls">
         <button className="play-btn" onClick={handlePlayPause}>
-          {project.isPlaying ? '⏸' : '▶'}
+          {project.isPlaying ? (
+            <Pause size={14} fill="currentColor" strokeWidth={2.2} />
+          ) : (
+            <Play size={14} fill="currentColor" strokeWidth={2.2} />
+          )}
         </button>
         <span className="time-display">
           {formatTime(project.currentTime)} / {formatTime(project.totalDuration)}
@@ -191,6 +196,7 @@ export function ProjectTimeline() {
                 <div className="track-controls">
                   <button
                     className={`mute-btn ${track.muted ? 'muted' : ''}`}
+                    title={track.muted ? '取消静音' : '静音'}
                     onClick={() =>
                       setProject((prev) => ({
                         ...prev,
@@ -200,10 +206,11 @@ export function ProjectTimeline() {
                       }))
                     }
                   >
-                    {track.muted ? '🔇' : '🔊'}
+                    {track.muted ? <VolumeX size={13} /> : <Volume2 size={13} />}
                   </button>
                   <button
                     className={`lock-btn ${track.locked ? 'locked' : ''}`}
+                    title={track.locked ? '解锁轨道' : '锁定轨道'}
                     onClick={() =>
                       setProject((prev) => ({
                         ...prev,
@@ -213,13 +220,14 @@ export function ProjectTimeline() {
                       }))
                     }
                   >
-                    {track.locked ? '🔒' : '🔓'}
+                    {track.locked ? <Lock size={13} /> : <Unlock size={13} />}
                   </button>
                   <button
                     className="add-element-btn"
+                    title="添加片段"
                     onClick={() => handleAddElement(track.id)}
                   >
-                    +
+                    <Plus size={13} />
                   </button>
                 </div>
               </div>

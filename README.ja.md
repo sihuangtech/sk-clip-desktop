@@ -48,14 +48,38 @@
 
 ## TTS エンジンオプション
 
-| エンジン | 定位 | サイズ | ライセンス | 適用場面 |
-| -------- | ---- | ---- | ---------- | -------- |
+### 2026 優先評価
+
+| エンジン | 位置づけ | サイズ | ライセンス | 適用場面 |
+| -------- | -------- | ------ | ---------- | -------- |
+| [CosyVoice](https://github.com/FunAudioLLM/CosyVoice) | 多言語 TTS / ゼロショット音声クローン | 重量（サイドカー） | Apache-2.0 | 中国語・英語吹き替え、クロスリンガルクローン |
+| [IndexTTS / IndexTTS2](https://github.com/index-tts/index-tts) | 制御可能なゼロショット TTS | 重量（サイドカー） | Apache-2.0、商用前に重みの条件確認が必要 | 中国語優先、発音制御、動画吹き替えの長さ・感情制御 |
+| [F5-TTS](https://github.com/SWivid/F5-TTS) | 音声クローン | 重量（サイドカー） | コードは MIT、事前学習重みは別途確認 | 高度なクローン、多言語ナレーション |
+| [Spark-TTS](https://github.com/SparkAudio/Spark-TTS) | LLM ベース TTS / ゼロショットクローン | 重量（サイドカー） | Apache-2.0 | 高自然度の音声生成 |
+
+### 軽量オフライン
+
+| エンジン | 位置づけ | サイズ | ライセンス | 適用場面 |
+| -------- | -------- | ------ | ---------- | -------- |
 | [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | 超軽量ルールベース | 数 MB | GPL-3.0 | 代替読み上げ、デバッグ |
 | [Piper](https://github.com/rhasspy/piper) | 軽量ニューラル | 音声パックによる | MIT/GPL | デフォルトオフライン読み上げ |
 | [KittenTTS](https://github.com/KittenML/KittenTTS) | 軽量ニューラル | 25-80 MB | Apache-2.0 | 自然なローカル読み上げ |
 | [Kokoro ONNX](https://github.com/thewh1teagle/kokoro-onnx) | 中軽量高品質 | ~80 MB | Apache-2.0 | 高品質読み上げ |
+
+### 実用成熟候補
+
+| エンジン | 位置づけ | サイズ | ライセンス | 適用場面 |
+| -------- | -------- | ------ | ---------- | -------- |
 | [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) | 声のクローン | 重量（サイドカー） | MIT | 吹き替え、クローン |
-| [F5-TTS](https://github.com/SWivid/F5-TTS) | 声のクローン | 重量（サイドカー） | MIT | 高度なクローン |
+| [OpenVoice](https://github.com/myshell-ai/OpenVoice) | 即時音声クローン | 中量（サイドカー） | MIT | 少量サンプルの音色クローン |
+
+### 実験的またはライセンス注意候補
+
+| エンジン | 位置づけ | サイズ | ライセンス | 適用場面 |
+| -------- | -------- | ------ | ---------- | -------- |
+| [Chatterbox TTS](https://github.com/resemble-ai/chatterbox) | TTS / 音声クローン | 中重量（サイドカー） | MIT | 英語優先の自然な読み上げ |
+| [Fish Speech](https://github.com/fishaudio/fish-speech) | 多言語 TTS / 音声クローン | 重量（サイドカー） | 非標準/研究向けライセンス、商用前に確認 | 研究評価 |
+| [ChatTTS](https://github.com/2noise/ChatTTS) | 会話型 TTS | 中重量（サイドカー） | 非商用/研究制限の確認が必要 | 会話調音声の研究 |
 
 ## 開発ガイド
 

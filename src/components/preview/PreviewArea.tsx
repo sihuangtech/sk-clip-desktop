@@ -1,5 +1,12 @@
 import { useAppContext } from '../../context/AppContext';
 import { convertFileSrc } from '@tauri-apps/api/core';
+import { AlertCircle, CheckCircle2, Clock3, Film } from 'lucide-react';
+
+function formatDuration(seconds: number) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
 
 export function PreviewArea() {
   const { appState } = useAppContext();
@@ -8,14 +15,14 @@ export function PreviewArea() {
     <div className="preview-area">
       {appState.status === 'idle' && (
         <div className="preview-placeholder">
-          <div className="placeholder-icon">🎥</div>
+          <div className="placeholder-icon"><Film size={36} strokeWidth={1.7} /></div>
           <p>选择视频文件开始创作</p>
         </div>
       )}
 
       {appState.status === 'uploading' && (
         <div className="preview-placeholder">
-          <div className="placeholder-icon">⏳</div>
+          <div className="placeholder-icon"><Clock3 size={36} strokeWidth={1.7} /></div>
           <p>正在加载视频...</p>
         </div>
       )}
@@ -28,20 +35,29 @@ export function PreviewArea() {
               controls
               className="preview-video"
             />
+            {appState.videoInfo && (
+              <div className="video-metadata">
+                <span>{appState.videoInfo.width} x {appState.videoInfo.height}</span>
+                <span>{formatDuration(appState.videoInfo.duration)}</span>
+                <span>{appState.videoInfo.framerate.toFixed(2)} fps</span>
+                <span>{appState.videoInfo.video_codec || 'video'}</span>
+                <span>{appState.videoInfo.audio_codec ? `Audio ${appState.videoInfo.audio_codec}` : 'No audio'}</span>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {appState.status === 'translating' && (
         <div className="preview-placeholder">
-          <div className="placeholder-icon">⏳</div>
+          <div className="placeholder-icon"><Clock3 size={36} strokeWidth={1.7} /></div>
           <p>正在翻译视频...</p>
         </div>
       )}
 
       {appState.status === 'completed' && (
         <div className="preview-placeholder">
-          <div className="placeholder-icon">✅</div>
+          <div className="placeholder-icon"><CheckCircle2 size={36} strokeWidth={1.7} /></div>
           <p>翻译完成</p>
         </div>
       )}
@@ -64,7 +80,7 @@ export function PreviewArea() {
 
       {appState.status === 'error' && (
         <div className="preview-placeholder error">
-          <div className="placeholder-icon">❌</div>
+          <div className="placeholder-icon"><AlertCircle size={36} strokeWidth={1.7} /></div>
           <p>{appState.message}</p>
         </div>
       )}

@@ -5,6 +5,7 @@ import { SUPPORTED_LANGUAGES } from '../../types';
 import { tauriApi } from '../../api/tauri';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { ErrorMessage } from '../common/ErrorMessage';
+import { CheckCircle2, Video } from 'lucide-react';
 
 export function VideoUpload() {
   const { appState, setAppState, sourceLanguage, setSourceLanguage, targetLanguage, setTargetLanguage } = useAppContext();
@@ -28,7 +29,8 @@ export function VideoUpload() {
 
     try {
       const importedPath = await tauriApi.uploadVideo(selected);
-      setAppState({ status: 'ready', videoPath: importedPath });
+      const videoInfo = await tauriApi.getVideoInfo(importedPath);
+      setAppState({ status: 'ready', videoPath: importedPath, videoInfo });
     } catch (err) {
       const message = err instanceof Error ? err.message : '上传失败';
       setError(message);
@@ -63,7 +65,7 @@ export function VideoUpload() {
       {appState.status === 'idle' && (
         <div className="upload-area">
           <button type="button" className="upload-label" onClick={handleFileSelect}>
-            <div className="upload-icon">🎬</div>
+            <div className="upload-icon"><Video size={40} strokeWidth={1.8} /></div>
             <p>点击选择视频文件</p>
             <p className="upload-hint">支持 MP4、AVI、MOV 等格式</p>
           </button>
@@ -120,7 +122,7 @@ export function VideoUpload() {
 
       {appState.status === 'completed' && (
         <div className="completed-actions">
-          <p className="success-text">✓ 翻译完成</p>
+          <p className="success-text"><CheckCircle2 size={18} /> 翻译完成</p>
           <div className="action-buttons">
             <button className="btn btn-secondary" onClick={handleReset}>
               重新开始

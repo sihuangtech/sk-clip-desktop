@@ -48,14 +48,38 @@
 
 ## TTS 引擎选项
 
+### 2026 优先评估
+
+| 引擎 | 定位 | 体积 | 许可证 | 适用场景 |
+| ---- | ---- | ---- | ------ | -------- |
+| [CosyVoice](https://github.com/FunAudioLLM/CosyVoice) | 多语言 TTS / 零样本克隆 | 较重（sidecar） | Apache-2.0 | 中英多语言配音、跨语言克隆 |
+| [IndexTTS / IndexTTS2](https://github.com/index-tts/index-tts) | 可控零样本 TTS | 较重（sidecar） | Apache-2.0，商用前仍需核对权重条款 | 中文优先、可控发音、视频配音时长/情绪控制 |
+| [F5-TTS](https://github.com/SWivid/F5-TTS) | 声音克隆 | 较重（sidecar） | 代码 MIT，权重需单独确认 | 高级克隆、多语言旁白 |
+| [Spark-TTS](https://github.com/SparkAudio/Spark-TTS) | 大模型 TTS / 零样本克隆 | 较重（sidecar） | Apache-2.0 | 高自然度声音生成 |
+
+### 轻量离线
+
 | 引擎 | 定位 | 体积 | 许可证 | 适用场景 |
 | ---- | ---- | ---- | ------ | -------- |
 | [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | 超轻量规则引擎 | 几 MB | GPL-3.0 | 备用朗读、调试 |
 | [Piper](https://github.com/rhasspy/piper) | 轻量神经网络 | 按语音包下载 | MIT/GPL | 默认离线朗读 |
 | [KittenTTS](https://github.com/KittenML/KittenTTS) | 轻量神经网络 | 25-80 MB | Apache-2.0 | 自然本地朗读 |
 | [Kokoro ONNX](https://github.com/thewh1teagle/kokoro-onnx) | 中轻量高质量 | ~80 MB | Apache-2.0 | 高质量朗读 |
+
+### 成熟实用候选
+
+| 引擎 | 定位 | 体积 | 许可证 | 适用场景 |
+| ---- | ---- | ---- | ------ | -------- |
 | [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) | 声音克隆 | 较重（sidecar） | MIT | 配音、克隆 |
-| [F5-TTS](https://github.com/SWivid/F5-TTS) | 声音克隆 | 较重（sidecar） | MIT | 高级克隆 |
+| [OpenVoice](https://github.com/myshell-ai/OpenVoice) | 即时声音克隆 | 中等（sidecar） | MIT | 少样本音色克隆 |
+
+### 实验前沿或许可证风险候选
+
+| 引擎 | 定位 | 体积 | 许可证 | 适用场景 |
+| ---- | ---- | ---- | ------ | -------- |
+| [Chatterbox TTS](https://github.com/resemble-ai/chatterbox) | TTS / 声音克隆 | 中重（sidecar） | MIT | 英文优先自然朗读 |
+| [Fish Speech](https://github.com/fishaudio/fish-speech) | 多语言 TTS / 声音克隆 | 较重（sidecar） | 非标准/研究许可，商用前需确认 | 研究评估 |
+| [ChatTTS](https://github.com/2noise/ChatTTS) | 对话式 TTS | 中重（sidecar） | 非商用/研究限制需确认 | 对话语气研究 |
 
 ## 开发指南
 

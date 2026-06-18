@@ -5,6 +5,7 @@ import type { AppConfig } from '../../types';
 import { LoadingSpinner } from '../common/LoadingSpinner';
 import { ErrorMessage } from '../common/ErrorMessage';
 import { SuccessMessage } from '../common/SuccessMessage';
+import { X } from 'lucide-react';
 
 export function SettingsPanel() {
   const { showSettings, setShowSettings } = useAppContext();
@@ -56,8 +57,8 @@ export function SettingsPanel() {
       <div className="settings-panel">
         <div className="settings-header">
           <h2>设置</h2>
-          <button className="close-btn" onClick={() => setShowSettings(false)}>
-            ✕
+          <button className="close-btn" title="关闭" onClick={() => setShowSettings(false)}>
+            <X size={18} />
           </button>
         </div>
 

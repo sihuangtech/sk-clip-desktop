@@ -2,7 +2,7 @@
 export type AppState =
   | { status: 'idle' }
   | { status: 'uploading' }
-  | { status: 'ready'; videoPath: string }
+  | { status: 'ready'; videoPath: string; videoInfo?: VideoMetadata }
   | { status: 'translating'; taskId: string }
   | { status: 'completed'; outputPath: string }
   | { status: 'error'; message: string }
@@ -67,6 +67,24 @@ export interface SpeechSynthesisResult {
   output_path: string;
   duration: number;
   sample_rate: number;
+}
+
+export interface VideoMetadata {
+  file_path: string;
+  file_size: number;
+  duration: number;
+  width: number;
+  height: number;
+  framerate: number;
+  video_codec: string;
+  audio_codec?: string;
+  bitrate: number;
+  sample_rate?: number;
+  audio_channels?: number;
+  format: string;
+  created_at?: string;
+  has_audio: boolean;
+  has_video: boolean;
 }
 
 // 语言

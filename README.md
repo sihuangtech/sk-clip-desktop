@@ -48,14 +48,38 @@ The project emphasizes local-first processing. Sensitive media and documents sta
 
 ## TTS Engine Options
 
+### 2026 Priority Evaluation
+
+| Engine | Role | Footprint | License | Best Fit |
+| ------ | ---- | --------- | ------- | -------- |
+| [CosyVoice](https://github.com/FunAudioLLM/CosyVoice) | Multilingual TTS and zero-shot cloning | Heavy (sidecar) | Apache-2.0 | Chinese/English dubbing, cross-language cloning |
+| [IndexTTS / IndexTTS2](https://github.com/index-tts/index-tts) | Controllable zero-shot TTS | Heavy (sidecar) | Apache-2.0; review model weights before commercial use | Chinese-first dubbing, pronunciation control, duration/emotion control |
+| [F5-TTS](https://github.com/SWivid/F5-TTS) | Voice cloning | Heavy (sidecar) | Code MIT; weights require separate review | Advanced cloning and multilingual narration |
+| [Spark-TTS](https://github.com/SparkAudio/Spark-TTS) | LLM-based TTS and zero-shot cloning | Heavy (sidecar) | Apache-2.0 | High-naturalness voice generation |
+
+### Lightweight Offline
+
 | Engine | Role | Footprint | License | Best Fit |
 | ------ | ---- | --------- | ------- | -------- |
 | [eSpeak NG](https://github.com/espeak-ng/espeak-ng) | Ultra-light rule-based | A few MB | GPL-3.0 | Fallback, debugging |
 | [Piper](https://github.com/rhasspy/piper) | Lightweight neural | Voice packages | MIT/GPL | Default offline narration |
 | [KittenTTS](https://github.com/KittenML/KittenTTS) | Lightweight neural | 25-80 MB | Apache-2.0 | Natural local narration |
 | [Kokoro ONNX](https://github.com/thewh1teagle/kokoro-onnx) | Mid-light high-quality | ~80 MB | Apache-2.0 | Quality narration |
+
+### Mature Practical Candidates
+
+| Engine | Role | Footprint | License | Best Fit |
+| ------ | ---- | --------- | ------- | -------- |
 | [GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS) | Voice cloning | Heavy (sidecar) | MIT | Dubbing, cloning |
-| [F5-TTS](https://github.com/SWivid/F5-TTS) | Voice cloning | Heavy (sidecar) | MIT | Advanced cloning |
+| [OpenVoice](https://github.com/myshell-ai/OpenVoice) | Instant voice cloning | Medium (sidecar) | MIT | Few-shot voice cloning |
+
+### Experimental Or License-Risk Candidates
+
+| Engine | Role | Footprint | License | Best Fit |
+| ------ | ---- | --------- | ------- | -------- |
+| [Chatterbox TTS](https://github.com/resemble-ai/chatterbox) | TTS and voice cloning | Medium-heavy (sidecar) | MIT | Natural English-first narration |
+| [Fish Speech](https://github.com/fishaudio/fish-speech) | Multilingual TTS and cloning | Heavy (sidecar) | Non-standard/research; review before commercial use | Research evaluation |
+| [ChatTTS](https://github.com/2noise/ChatTTS) | Conversational TTS | Medium-heavy (sidecar) | Non-commercial/research constraints require review | Dialogue-style speech research |
 
 ## Development
 

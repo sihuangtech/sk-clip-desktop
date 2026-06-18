@@ -1,3 +1,5 @@
+import { CheckCircle2 } from 'lucide-react';
+
 interface SuccessMessageProps {
   message: string;
 }
@@ -5,7 +7,7 @@ interface SuccessMessageProps {
 export function SuccessMessage({ message }: SuccessMessageProps) {
   return (
     <div className="success-message">
-      <span className="success-icon">✓</span>
+      <CheckCircle2 className="success-icon" size={16} />
       <span>{message}</span>
     </div>
   );
